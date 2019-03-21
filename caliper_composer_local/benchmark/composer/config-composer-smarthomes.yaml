@@ -1,0 +1,44 @@
+---
+test:
+  name: smarthome
+  description: Testing
+  clients:
+    type: local
+    number: 1
+  rounds:
+  - label: smarthomes
+    txNumber:
+    - 25
+    trim: 0
+    rateControl:
+    - type: fixed-rate
+      opts:
+        tps: 5
+    arguments:
+      testAssets: 50
+      transaction: DeviceReading
+    callback: benchmark/composer/composer-samples/smarthomes.js
+  - label: smarthomes
+    txNumber:
+    - 100
+    trim: 0
+    rateControl:
+    - type: fixed-rate
+      opts:
+        tps: 10
+    arguments:
+      testAssets: 50
+    callback: benchmark/composer/composer-samples/smarthomes.js
+monitor:
+  type:
+  - docker
+  - process
+  docker:
+    name:
+    - all
+    
+  process:
+  - command: node
+    arguments: local-client.js
+    multiOutput: avg
+  interval: 1

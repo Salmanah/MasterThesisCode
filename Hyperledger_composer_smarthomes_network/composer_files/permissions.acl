@@ -1,0 +1,135 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+rule NetworkAdminUser {
+    description: "Grant business network administrators full access to user resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "**"
+    action: ALLOW
+}
+
+rule NetworkAdminSystem {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
+}
+
+
+ 
+rule SystemACL {
+  description:  "System ACL to permit all access"
+  participant: "org.hyperledger.composer.system.Participant"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.**"
+  action: ALLOW
+}
+
+/*
+ * Rules for participant registry access
+*/
+
+rule Owner_RU_Home{
+	  description: "Grant owners access of their homes"
+  	participant(m): "org.blockchain.model.Owner"
+  	operation: READ, UPDATE, CREATE
+  	resource(v): "org.blockchain.model.Home"
+    transaction(tx): "org.blockchain.model.AddDevice"
+  	condition: (m.getIdentifier() == v.homeOwner.getIdentifier())	
+  	action: ALLOW
+}
+
+rule Owner_RUC_Device{
+	description: "Grant owners access of their Devices"
+  	participant(m): "org.blockchain.model.Owner"
+  	operation: READ, UPDATE, CREATE
+  	resource(v): "org.blockchain.model.Device"
+  	condition: (m.getIdentifier() == v.homeOwner.getIdentifier())	
+  	action: ALLOW
+}
+
+rule Home_RU_Home{
+  description: "Grant Homes access to Home resources"
+  participant(m): "org.blockchain.model.Home"
+  operation: READ, UPDATE
+  resource(v): "org.blockchain.model.Home"
+  condition:(v.getIdentifier() == m.getIdentifier())
+  action: ALLOW
+}
+
+rule HOME_R_Owner{
+  description: "Grant Home read access to its owner"
+  participant(m): "org.blockchain.model.Home"
+  operation: READ
+  resource(v): "org.blockchain.model.Owner"
+  condition: (m.homeOwner.getIdentifier() == v.getIdentifier())
+  action: ALLOW
+}
+rule Service_R_Service{
+  description: "Grant Services READ access to Service resources"
+  participant(m): "org.blockchain.model.Service"
+  operation: READ, UPDATE
+  resource(v): "org.blockchain.model.Service"
+  condition: (v.getIdentifier() == m.getIdentifier())
+  action: ALLOW
+}
+
+rule Device_RU_Device{
+	description: "Grant device access to themselves"
+  	participant(m): "org.blockchain.model.Device"
+  	operation: READ,UPDATE
+  	resource(v): "org.blockchain.model.Device"
+  	condition: (m.getIdentifier() == v.getIdentifier())
+  	action: ALLOW
+}
+
+ rule Home_RUC_Device{
+   description: "Grant only the owner of the device access rights to their own assets"
+   participant(m): "org.blockchain.model.Home"
+   operation: READ,UPDATE, CREATE
+   resource(v): "org.blockchain.model.Device"
+   condition: (v.home.getIdentifier() == m.getIdentifier())
+   action: ALLOW   
+ }
+
+
+
+/**
+ *Rules for transaction invocation
+ */
+rule Device_CU_DeviceReading{
+  description:"Grant devices access to invoke DeviceReading transaction"
+  participant: "org.blockchain.model.Device"
+  operation: CREATE, UPDATE
+  resource: "org.blockchain.model.DeviceReading"
+  action: ALLOW
+}
+
+
+/**
+ * Make sure all resources are locked down by default.
+ * If permissions need to be granted to certain resources, that should happen
+ * above this rule. Anything not explicitly specified gets locked down.
+ */
+rule Default {
+    description: "Deny all participants access to all resources"
+    participant: "ANY"
+    operation: ALL
+    resource: "org.blockchain.model.*"
+    action: DENY
+}
+
+

@@ -1,0 +1,73 @@
+{
+  "caliper": {
+    "blockchain": "fabric"
+  },
+  "fabric": {
+    "cryptodir": "network/fabric-v1.2/config/crypto-config",
+    "network": {
+      "orderer": {
+        "url": "grpc://158.39.77.205:7050",
+        "mspid": "OrdererMSP",
+        "msp": "network/fabric-v1.2/config/crypto-config/ordererOrganizations/example.com/msp/",
+        "server-hostname": "orderer.example.com",
+        "tls_cacerts": "network/fabric-v1.2/config/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/ca.crt"
+      },
+      "org1": {
+        "name": "Org1",
+        "mspid": "Org1MSP",
+        "msp": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org1.example.com/msp/",
+        "ca": {
+          "url": "http://158.39.77.205:7054",
+          "name": "ca.org1.example.com"
+        },
+        "peer0": {
+          "requests": "grpc://158.39.77.41:7051",
+          "events": "grpc://158.39.77.41:7053",
+          "server-hostname": "peer0.org1.example.com",
+          "tls_cacerts": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
+        }
+      }
+    },
+    "channel": [
+      {
+        "name": "mychannel",
+        "deployed": true,
+        "config": "network/fabric-v1.2/config/channel.tx",
+        "organizations": ["org1"]
+      }
+    ],
+    "chaincodes": [
+      {"id": "device_1", "path": "contract/fabric/smarthomes/go", "language":"golang", "version": "v2", "channel": "mychannel"}
+    ],
+    "endorsement-policy": {
+      "identities": [
+        {
+          "role": {
+            "name": "member",
+            "mspId": "Org1MSP"
+          }
+        },
+        {
+          "role": {
+            "name": "admin",
+            "mspId": "Org1MSP"
+          }
+        }
+      ],
+      "policy": { "2-of": [{"signed-by": 0}, {"signed-by": 1}]}
+    },
+    "context": {
+      "smallOperations": "mychannel",
+      "init": "mychannel",
+      "open": "mychannel",
+      "publish": "mychannel",
+      "query": "mychannel"
+    }
+  },
+  "info" : {
+    "Version": "1.2.0",
+    "Size": "2 Orgs with 1 Peer",
+    "Orderer": "Solo",
+    "Distribution": "Single Host"
+  }
+}
