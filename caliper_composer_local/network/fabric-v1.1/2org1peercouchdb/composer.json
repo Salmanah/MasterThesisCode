@@ -8,7 +8,7 @@
   },
   "composer": {
     "chaincodes": [
-      {"id": "smarthomes", "version": "0.0.19", "path": "src/contract/composer", "orgs": ["Org1"], "loglevel": "INFO"}
+      {"id": "smarthomes", "version": "0.0.20", "path": "src/contract/composer", "orgs": ["Org1"], "loglevel": "INFO"}
     ],
     "cryptodir": "network/fabric-v1.1/config/crypto-config",
     "network": {

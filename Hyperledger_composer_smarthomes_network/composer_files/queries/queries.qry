@@ -1,0 +1,29 @@
+/**
+* Sample queries for smarthomes network
+*/
+
+
+query selectDevices{
+  description: "Select all devices"
+  statement:
+      SELECT org.blockchain.model.Device
+}
+
+query selectDevicesThreshold{
+  description: "Select devices that have reached a threshold"
+  statement:
+      SELECT org.blockchain.model.Device
+          WHERE (deviceReadings CONTAINS 35)
+}
+
+query selectHomes{
+  description: "Select all homes"
+  statement: 
+      SELECT org.blockchain.model.Home
+}
+
+query selectOwners{
+  description: "Select all owners"
+  statement: 
+      SELECT org.blockchain.model.Owner
+}

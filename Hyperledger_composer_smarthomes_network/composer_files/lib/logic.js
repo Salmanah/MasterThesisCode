@@ -4,34 +4,34 @@
 
 /***
  * A temperature measurement has been sent from a device
- * @param {org.blockchain.model.DeviceReading} deviceReadings - the deviceReading transaction
+ * @param {org.blockchain.model.DeviceReading} readings - the deviceReading transaction
  * @transaction
  */
 
- async function deviceReading(deviceReadings){
-     const device = deviceReadings.device;
-   	 const readingTime = deviceReadings.readingTime;
-     const factory = getFactory(); 
-     const namespace = "org.blockchain.model"; 
+ async function readingReceived(readings){
+    const device = readings.device;
+    const readingTime = readings.readingTime;
+    const factory = getFactory(); 
      
-     console.log("Temperature received at: "+readingTime);
-     console.log("From Device: "+device.deviceId); 
+    console.log("Temperature received at: "+readingTime);
+    console.log("From Device: "+device.deviceId); 
 
-     if(device.deviceReadings){
-         device.deviceReadings.push(deviceReadings); 
-     }else{
-         device.deviceReadings = [deviceReadings]; 
-     }
+    if(device.deviceReadings){
+        device.deviceReadings.push(readings); 
+    }else{
+        device.deviceReadings = [readings]; 
+    }
 
-     //add the temperature reading to the device
-     const deviceRegistry = await getParticipantRegistry(namespace+'.Device'); 
-     await deviceRegistry.update(device);
-
-     //Emit event that device data has been updated and received
-     let readingEvent = factory.newEvent('org.blockchain.model','DeviceReadingSent');
-     readingEvent.message = "Device reading sent";
-     readingEvent.device = device; 
-     emit(readingEvent); 
+    if(readings.temperature < device.minimumTemperature || readings.temperature > device.maximumTemperature){
+      var temperatureEvent = factory.newEvent("org.blockchain.model","TemperatureThresholdEvent");
+      temperatureEvent.device = device; 
+      temperatureEvent.message = "Temperature has reached threshold! "+device.deviceId+" has a temperature of "+readings.temperature;
+      temperatureEvent.readingTime = reading.readingTime; 
+      emit(temperatureEvent); 
+    }
+    //add the temperature reading to the device
+    const deviceRegistry = await getParticipantRegistry('org.blockchain.model.Device'); 
+    await deviceRegistry.update(device);
  }
 
 
@@ -42,7 +42,7 @@
   */
 
  async function addingHome(addingHome){
-     console.log("Adding home", addingHome.$identifier); 
+     console.log("Adding home", addingHome.homeId); 
    
      const factory = getFactory(); 
      const namespace = "org.blockchain.model"; 

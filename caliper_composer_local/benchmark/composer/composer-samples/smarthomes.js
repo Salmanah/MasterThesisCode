@@ -73,7 +73,8 @@ module.exports.init = async function(blockchain, context, args) {
         //Received a device reading, require Homes, owners and devices. 
             // Test specified number of Owners
         owners.push(factory.newResource(namespace, 'Owner', 'OWNER_' + uuid + '_0'));
-
+        console.log("--------- CREATED NEW OWNER---------");
+        console.log("OWNER_ID,",owners);
         // Test specified number of Homes
         for(let i = 0; i<testAssetNum; i++){
             let home = factory.newResource(namespace, 'Home', 'HOME_' + uuid + '_'+i);
@@ -81,6 +82,8 @@ module.exports.init = async function(blockchain, context, args) {
             homeAddress.street = 'Problemveien '+i;
             homeAddress.city ='Oslo';
             home.address = homeAddress;
+            console.log("--------- CREATED NEW HOME---------");
+            console.log("HOME_ID,",home.homeId);
             home.homeOwner = factory.newRelationship(namespace,'Owner','OWNER_' +uuid + '_0'); 
             homes.push(home);
         }
@@ -91,6 +94,8 @@ module.exports.init = async function(blockchain, context, args) {
             device.minimumTemperature = 25.0; 
             device.maximumTemperature = 30.0
             device.nickname = uuid;
+            console.log("--------- CREATED NEW DEVICE---------");
+            console.log("DEVICE_ID,",device.deviceId);
             device.home = factory.newRelationship(namespace, 'Home', 'HOME_' + uuid + '_0');
             devices.push(device);  
         }
@@ -117,12 +122,25 @@ module.exports.init = async function(blockchain, context, args) {
         
         if (!populated) {
             logger.debug('Adding test assets ...');
+            logger.debug(homes);
+            logger.debug("-----------------------");
+            logger.debug(owners);
+            logger.debug("-----------------------");
+            logger.debug(devices);
+            logger.debug("-----------------------");
+
             await homeRegistry.addAll(homes);
             await ownerRegistry.addAll(owners);
             await deviceRegistry.addAll(devices);
             logger.debug('Asset addition complete ...');
         } else {
             logger.debug('Updating test assets ...');
+            logger.debug(homes);
+            logger.debug("-----------------------");
+            logger.debug(owners);
+            logger.debug("-----------------------");
+            logger.debug(devices);
+            logger.debug("-----------------------");
             await removeExisting(homeRegistry, 'HOME_' + uuid);
             await removeExisting(ownerRegistry, 'OWNER_' + uuid);
             await removeExisting(deviceRegistry, 'DEVICE_' + uuid);
@@ -159,7 +177,10 @@ module.exports.run = function() {
         throw new Error("No valid test transaction specified in module.run");
     }
     }
-
+    
+    logger.debug("SENDING TRANSACTION DeviceReading");
+    logger.debug(transaction); 
+    logger.debug("---------------------------------------");
     return bc.bcObj.submitTransaction(busNetConnection, transaction);
 };
 

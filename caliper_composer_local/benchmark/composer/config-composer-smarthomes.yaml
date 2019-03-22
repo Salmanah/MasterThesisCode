@@ -8,26 +8,27 @@ test:
   rounds:
   - label: smarthomes
     txNumber:
-    - 25
+    - 5
     trim: 0
     rateControl:
     - type: fixed-rate
       opts:
         tps: 5
     arguments:
-      testAssets: 50
+      testAssets: 2
       transaction: DeviceReading
     callback: benchmark/composer/composer-samples/smarthomes.js
   - label: smarthomes
     txNumber:
-    - 100
+    - 10
     trim: 0
     rateControl:
     - type: fixed-rate
       opts:
         tps: 10
     arguments:
-      testAssets: 50
+      testAssets: 2
+      transaction: DeviceReading
     callback: benchmark/composer/composer-samples/smarthomes.js
 monitor:
   type:
