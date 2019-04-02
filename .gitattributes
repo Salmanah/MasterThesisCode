@@ -1,0 +1,6 @@
+caliper filter=lfs diff=lfs merge=lfs -text
+caliper_composer_local filter=lfs diff=lfs merge=lfs -text
+caliper_fabric_external_network filter=lfs diff=lfs merge=lfs -text
+caliper_salman.zip filter=lfs diff=lfs merge=lfs -text
+Hyperledger_composer_smarthomes_network filter=lfs diff=lfs merge=lfs -text
+smarthomes-fabric filter=lfs diff=lfs merge=lfs -text
