@@ -9,7 +9,7 @@ services:
         extends:
             file: docker-compose-base.yml
             service: peer
-        container_name: peer1.org1.example.com
+        container_name: peer1.org.example.com
         environment:
             - CORE_PEER_CHAINCODELISTENADDRESS=peer1.org1.example.com:7052
             - CORE_PEER_ID=peer1.org1.example.com

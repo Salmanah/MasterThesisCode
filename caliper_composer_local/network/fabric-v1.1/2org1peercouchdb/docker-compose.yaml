@@ -49,6 +49,10 @@ services:
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
       - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.org1.example.com:5984
+       ##THIS DOWN HERE IS FROM THE INTERNET, REMOVE IF IT DOES NOT HELP
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+      #################################################################
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: peer node start
     ports:
@@ -69,7 +73,11 @@ services:
     ports:
       - 5984:5984
     environment:
-      DB_URL: http://localhost:5984/member_db
+    ##THIS DOWN HERE IS FROM THE INTERNET
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+      ###################################
+      - DB_URL= http://localhost:5984/member_db
 
   peer1.org1.example.com:
     container_name: peer1.org1.example.com
@@ -89,6 +97,10 @@ services:
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org1.example.com:7051
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
       - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.org1.example.com:5984
+      ##THIS DOWN HERE IS FROM THE INTERNET, REMOVE IF IT DOES NOT HELP
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+      #################################################################
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: peer node start
     ports:
@@ -120,6 +132,10 @@ services:
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer2.org1.example.com:7051
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
       - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.org1.example.com:5984
+       ##THIS DOWN HERE IS FROM THE INTERNET, REMOVE IF IT DOES NOT HELP
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+      #################################################################
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: peer node start
     ports:

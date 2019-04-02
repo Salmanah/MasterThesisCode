@@ -26,20 +26,23 @@
           "server-hostname": "peer0.org1.example.com",
           "tls_cacerts": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
         }
+      },
+      "org2": {
+        "name": "Org2",
+        "mspid": "Org2MSP",
+        "msp": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org2.example.com/msp/",
+        "ca": {
+          "url": "http://158.39.77.205:7054",
+          "name": "ca.org2.example.com"
+        },
+        "peer0": {
+          "requests": "grpc://158.39.77.41:7051",
+          "events": "grpc://158.39.77.41:7053",
+          "server-hostname": "peer0.org1.example.com",
+          "tls_cacerts": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
+        }
       }
-    },
-    "channel": [
-      {
-        "name": "mychannel",
-        "deployed": true,
-        "config": "network/fabric-v1.2/config/channel.tx",
-        "organizations": ["org1"]
-      }
-    ],
-    "chaincodes": [
-      {"id": "device_1", "path": "contract/fabric/smarthomes/go", "language":"golang", "version": "v2", "channel": "mychannel"}
-    ],
-    "endorsement-policy": {
+    },"endorsement-policy": {
       "identities": [
         {
           "role": {
@@ -54,8 +57,19 @@
           }
         }
       ],
-      "policy": { "2-of": [{"signed-by": 0}, {"signed-by": 1}]}
+      "policy": { "1-of": [{"signed-by": 0}]}
     },
+    "channel": [
+      {
+        "name": "mychannel",
+        "deployed": false,
+        "config": "network/fabric-v1.2/config/channel.tx",
+        "organizations": ["org1"]
+      }
+    ],
+    "chaincodes": [
+      {"id": "device", "path": "contract/fabric/smarthomes/go", "language":"golang", "version": "v11.2", "channel": "mychannel"}
+    ],
     "context": {
       "smallOperations": "mychannel",
       "init": "mychannel",

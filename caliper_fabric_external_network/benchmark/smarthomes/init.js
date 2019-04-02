@@ -51,7 +51,7 @@ module.exports.run = function() {
         };
     }
 
-    return bc.invokeSmartContract(contx, 'device', 'v1', args, 30);
+    return bc.invokeSmartContract(contx, 'device', 'v11.2', args, 30);
 };
 
 module.exports.end = function() {
