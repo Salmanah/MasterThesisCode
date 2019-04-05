@@ -12,10 +12,10 @@ services:
             - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
             - FABRIC_CA_SERVER_CA_NAME=ca.example.com
             - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
-            - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/aa98a3a732a79a0ba546e52ee64a1e87aec9d0e60025b65595e3e99994f5f9cc_sk
+            - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/70c2faa465d6c035935e9e79db647502dfad6e62b40843986f5702d8a8629fdb_sk
         extra_hosts:
             - "peer0.org1.example.com:158.39.77.41"
-            - "peer1.org1.example.com:158.39.77.152"
+            - "peer0.org2.example.com:158.39.77.152"
             - "peer2.org1.example.com:158.39.77.131"
         ports:
             - "7054:7054"
@@ -164,7 +164,7 @@ services:
             - ORDERER_PREFERREDMAXBYTES=${ORDERER_PREFERREDMAXBYTES}
         extra_hosts:
             - "peer0.org1.example.com:158.39.77.41"
-            - "peer1.org1.example.com:158.39.77.152"
+            - "peer0.org2.example.com:158.39.77.152"
             - "peer2.org1.example.com:158.39.77.131"
         volumes:
             - ../crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/var/hyperledger/msp
@@ -205,7 +205,7 @@ services:
             - ../network-config/:/var/hyperledger/configs
         extra_hosts:
             - "peer0.org1.example.com:158.39.77.41"
-            - "peer1.org1.example.com:158.39.77.152"
+            - "peer1.org2.example.com:158.39.77.152"
             - "peer2.org1.example.com:158.39.77.131"
         depends_on:
             - kafka0
@@ -240,7 +240,7 @@ services:
             - ../network-config/:/var/hyperledger/configs
         extra_hosts:
             - "peer0.org1.example.com:158.39.77.41"
-            - "peer1.org1.example.com:158.39.77.152"
+            - "peer1.org2.example.com:158.39.77.152"
             - "peer2.org1.example.com:158.39.77.131"
         depends_on:
             - kafka0

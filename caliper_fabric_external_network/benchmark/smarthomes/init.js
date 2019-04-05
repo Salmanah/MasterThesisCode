@@ -16,10 +16,9 @@
 
 module.exports.info  = 'Creating Devices.';
 
-let txIndex = 0;
-let temperatures = ['30', '32', '12', '35', '36', '40', '125'];
-let owners = ['Salman', 'Sindre', 'Dennis', 'Tony Stark'];
+
 let bc, contx;
+
 
 module.exports.init = function(blockchain, context, args) {
     bc = blockchain;
@@ -29,29 +28,18 @@ module.exports.init = function(blockchain, context, args) {
 };
 
 module.exports.run = function() {
-    txIndex++;
-    let deviceId = 'DEVICE_' + txIndex.toString() + '_' + process.pid.toString();
-    let deviceTemp = temperatures[txIndex % temperatures.length];
-    let deviceHome = 'HOME_'+ txIndex.toString() + '_' + process.pid.toString(); 
-    let deviceOwner = owners[txIndex % owners.length];
 
     let args;
     if (bc.bcType === 'fabric-ccp') {
         args = {
-            chaincodeFunction: 'initDevice',
-            chaincodeArguments: [deviceId, deviceTemp, deviceHome, deviceOwner],
+            chaincodeFunction: 'initEnvironment'
         };
-    } else {
+    }else{
         args = {
-            verb: 'initDevice',
-            id: deviceId,
-            deviceReading: deviceTemp,
-            home: deviceHome,
-            owner: deviceOwner
+            verb: 'initEnvironment'
         };
-    }
-
-    return bc.invokeSmartContract(contx, 'device', 'v11.2', args, 30);
+    } 
+    return bc.invokeSmartContract(contx, 'device', 'v10.6', args, 30);
 };
 
 module.exports.end = function() {

@@ -25,6 +25,12 @@
           "events": "grpc://158.39.77.41:7053",
           "server-hostname": "peer0.org1.example.com",
           "tls_cacerts": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
+        },
+        "peer1": {
+          "requests": "grpc://158.39.77.131:9051",
+          "events": "grpc://158.39.77.131:9053",
+          "server-hostname": "peer2.org1.example.com",
+          "tls_cacerts": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt"
         }
       },
       "org2": {
@@ -36,9 +42,9 @@
           "name": "ca.org2.example.com"
         },
         "peer0": {
-          "requests": "grpc://158.39.77.41:7051",
-          "events": "grpc://158.39.77.41:7053",
-          "server-hostname": "peer0.org1.example.com",
+          "requests": "grpc://158.39.77.152:8051",
+          "events": "grpc://158.39.77.152:8053",
+          "server-hostname": "peer0.org2.example.com",
           "tls_cacerts": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
         }
       }
@@ -52,29 +58,36 @@
         },
         {
           "role": {
+            "name": "member",
+            "mspId": "Org2MSP"
+          }
+        },
+        {
+          "role": {
             "name": "admin",
             "mspId": "Org1MSP"
           }
         }
       ],
-      "policy": { "1-of": [{"signed-by": 0}]}
+      "policy": { "2-of": [{"signed-by": 0},{"signed-by": 1}]}
     },
     "channel": [
       {
         "name": "mychannel",
         "deployed": false,
         "config": "network/fabric-v1.2/config/channel.tx",
-        "organizations": ["org1"]
+        "organizations": ["org1","org2"]
       }
     ],
     "chaincodes": [
-      {"id": "device", "path": "contract/fabric/smarthomes/go", "language":"golang", "version": "v11.2", "channel": "mychannel"}
+      {"id": "device", "path": "contract/fabric/smarthomes/go", "language":"golang", "version": "v10.6", "channel": "mychannel"}
     ],
     "context": {
       "smallOperations": "mychannel",
       "init": "mychannel",
       "open": "mychannel",
       "publish": "mychannel",
+      "sendReading":"mychannel",
       "query": "mychannel"
     }
   },

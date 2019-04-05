@@ -6,9 +6,9 @@ test:
     type: local
     number: 5
   rounds:
-  - label: smallOperations
+  - label: init
     txNumber:
-    - 5
+    - 100
     rateControl:
     - type: fixed-rate
       opts:
@@ -17,17 +17,33 @@ test:
       accounts: 4
       txnPerBatch: 1
     callback: benchmark/smarthomes/init.js
-  - label: query
+  - label: sendReading
     txNumber:
-    - 5
+    - 100
     rateControl:
     - type: fixed-rate
       opts:
         tps: 50
-    callback: benchmark/smallbank/query.js
+    callback: benchmark/smarthomes/sendReading.js
+  - label: query
+    txNumber:
+    - 50
+    rateControl:
+    - type: fixed-rate
+      opts:
+        tps: 50
+    callback: benchmark/smarthomes/query.js
 monitor:
-  type: docker
+  type: 
+  - docker
   docker:
     name:
-    - all
+    - peer0.org1.example.com
+    - peer2.org1.example.com
+    - peer0.org2.example.com
+    - orderer0.example.com
+  process:
+  - command: node
+    arguments: local-client.js
+    multiOutput: avg
   interval: 1

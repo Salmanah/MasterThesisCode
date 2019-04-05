@@ -5,7 +5,7 @@ networks:
     behave:
 
 services:
-    peer1.org1.example.com:
+    peer0.org2.example.com:
         extends:
             file: docker-compose-base.yml
             service: peer
@@ -15,6 +15,7 @@ services:
             - CORE_PEER_ID=peer0.org1.example.com
             - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
             - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.example.com:7051
+            - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
             - CORE_PEER_GOSSIP_ORGLEADER=${CORE_PEER_GOSSIP_ORGLEADER_PEER0_ORG1}
             - CORE_PEER_GOSSIP_USELEADERELECTION=${CORE_PEER_GOSSIP_USELEADERELECTION_PEER0_ORG1}
             - CORE_PEER_LOCALMSPID=Org1MSP
@@ -31,7 +32,7 @@ services:
             - "orderer1.example.com:158.39.77.205"
             - "orderer2.example.com:158.39.77.205"
             - "ca.example.com:158.39.77.205"
-            - "peer1.org1.example.com:158.39.77.152"
+            - "peer0.org2.example.com:158.39.77.152"
             - "peer2.org1.example.com:158.39.77.131"
         networks:
           behave:

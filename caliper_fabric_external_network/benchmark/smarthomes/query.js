@@ -17,7 +17,7 @@
 module.exports.info  = 'Querying devices.';
 
 let txIndex = 0;
-let owners = ['Salman', 'Sindre', 'Dennis', 'Tony Stark'];
+let devices = ['DEVICE_001'];
 let bc, contx;
 module.exports.init = function(blockchain, context, args) {
     bc = blockchain;
@@ -28,23 +28,23 @@ module.exports.init = function(blockchain, context, args) {
 
 module.exports.run = function() {
     txIndex++;
-    let deviceOwner = owners[txIndex % owners.length];
+    let deviceID = devices[txIndex % 2];
     let args;
 
     if (bc.bcType === 'fabric-ccp') {
         args = {
-            chaincodeFunction: 'queryDeviceByOwner',
-            chaincodeArguments: [deviceOwner]
+            chaincodeFunction: 'readDevice',
+            chaincodeArguments: 'DEVICE_001'
         };
     } else {
         args = {
-            verb: 'queryDeviceByOwner',
-            owner: deviceOwner
+            verb: 'readDevice',
+            deviceID:'DEVICE_001'
         };
     }
 
     // TODO: until Fabric query is implemented, use invoke
-    return bc.invokeSmartContract(contx, 'device', 'v1', args, 120);
+    return bc.invokeSmartContract(contx, 'device', 'v10.6', args, 120);
 };
 
 module.exports.end = function() {

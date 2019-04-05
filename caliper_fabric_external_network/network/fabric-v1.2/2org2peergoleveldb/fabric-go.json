@@ -10,30 +10,30 @@
     "cryptodir": "network/fabric-v1.2/config/crypto-config",
     "network": {
       "orderer": {
-        "url": "grpc://localhost:7050",
+        "url": "grpc://158.39.77.205:7050",
         "mspid": "OrdererMSP",
         "msp": "network/fabric-v1.2/config/crypto-config/ordererOrganizations/example.com/msp/",
-        "server-hostname": "orderer.example.com",
-        "tls_cacerts": "network/fabric-v1.2/config/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt"
+        "server-hostname": "orderer0.example.com",
+        "tls_cacerts": "network/fabric-v1.2/config/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/ca.crt"
       },
       "org1": {
         "name": "peerOrg1",
         "mspid": "Org1MSP",
         "msp": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org1.example.com/msp/",
         "ca": {
-          "url": "http://localhost:7054",
+          "url": "http://158.39.77.205:7054",
           "name": "ca.org1.example.com"
         },
         "peer1": {
-          "requests": "grpc://localhost:7051",
-          "events": "grpc://localhost:7053",
+          "requests": "grpc://158.39.77.41:7051",
+          "events": "grpc://158.39.77.41:7053",
           "server-hostname": "peer0.org1.example.com",
           "tls_cacerts": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
         },
         "peer2": {
-          "requests": "grpc://localhost:7057",
-          "events": "grpc://localhost:7059",
-          "server-hostname": "peer1.org1.example.com",
+          "requests": "grpc://158.39.77.131:7057",
+          "events": "grpc://158.39.77.131:7059",
+          "server-hostname": "peer2.org1.example.com",
           "tls_cacerts": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt"
         }
       },
@@ -41,21 +41,11 @@
         "name": "peerOrg2",
         "mspid": "Org2MSP",
         "msp": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org2.example.com/msp/",
-        "ca": {
-          "url": "http://localhost:8054",
-          "name": "ca.org2.example.com"
-        },
         "peer1": {
-          "requests": "grpc://localhost:8051",
-          "events": "grpc://localhost:8053",
+          "requests": "grpc://158.39.77.152:8051",
+          "events": "grpc://158.39.77.152:8053",
           "server-hostname": "peer0.org2.example.com",
           "tls_cacerts": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt"
-        },
-        "peer2": {
-          "requests": "grpc://localhost:8057",
-          "events": "grpc://localhost:8059",
-          "server-hostname": "peer1.org2.example.com",
-          "tls_cacerts": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt"
         }
       }
     },
@@ -63,15 +53,12 @@
       {
         "name": "mychannel",
         "deployed": false,
-        "config": "network/fabric-v1.2/config/mychannel.tx",
+        "config": "network/fabric-v1.2/config/channel.tx",
         "organizations": ["org1", "org2"]
       }
     ],
     "chaincodes": [
-      {"id": "drm", "path": "contract/fabric/drm", "language":"golang", "version": "v0", "channel": "mychannel"},
-      {"id": "marbles", "path": "contract/fabric/marbles-norichquery/go", "language":"golang", "version": "v1", "channel": "mychannel"},
-      {"id": "simple", "path": "contract/fabric/simple/go", "language":"golang", "version": "v0", "channel": "mychannel"},
-      {"id": "smallbank", "path": "contract/fabric/smallbank", "language":"golang", "version": "v0", "channel": "mychannel"}
+      {"id": "smarthomes", "path": "contract/fabric/smarthomes/go", "language":"golang", "version": "v11.3", "channel": "mychannel"}
     ],
     "endorsement-policy": {
       "identities": [
