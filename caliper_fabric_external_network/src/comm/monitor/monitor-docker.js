@@ -45,9 +45,12 @@ function findContainers() {
                 }
                 else if(filterName.remote.hasOwnProperty(remote.hostname)) {
                     filterName.remote[remote.hostname].containers.push(remote.pathname);
+                    
                 }
                 else {
+                    let remote = url.parse(name, true); 
                     filterName.remote[remote.hostname] = {port: remote.port, containers: [remote.pathname]};
+                    
                 }
             }
             else{
@@ -95,8 +98,9 @@ function findContainers() {
             port: filterName.remote[h].port
             // version: 'v1.20'
         });
+        
         let p = docker.listContainers().then((containers) => {
-            let size = containers.length;
+            let size = containers.length; 
             if(size === 0) {
                 logger.error('monitor-docker: could not find remote container at ' + h);
                 return Promise.resolve();
@@ -120,7 +124,7 @@ function findContainers() {
             }
             return Promise.resolve();
         }).catch((err) => {
-            logger.error('Error(monitor-docker):' + err);
+            logger.error('Error(monitor-docker): REMOTE '+" --------- " + err);
             return Promise.resolve();
         });
         promises.push(p);

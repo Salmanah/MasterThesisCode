@@ -18,7 +18,7 @@
         "msp": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org1.example.com/msp/",
         "ca": {
           "url": "http://158.39.77.205:7054",
-          "name": "ca.org1.example.com"
+          "name": "ca.example.com"
         },
         "peer0": {
           "requests": "grpc://158.39.77.41:7051",
@@ -39,7 +39,7 @@
         "msp": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org2.example.com/msp/",
         "ca": {
           "url": "http://158.39.77.205:7054",
-          "name": "ca.org2.example.com"
+          "name": "ca2.example.com"
         },
         "peer0": {
           "requests": "grpc://158.39.77.152:8051",
@@ -74,13 +74,13 @@
     "channel": [
       {
         "name": "mychannel",
-        "deployed": false,
+        "deployed": true,
         "config": "network/fabric-v1.2/config/channel.tx",
         "organizations": ["org1","org2"]
       }
     ],
     "chaincodes": [
-      {"id": "device", "path": "contract/fabric/smarthomes/go", "language":"golang", "version": "v10.6", "channel": "mychannel"}
+      {"id": "device", "path": "contract/fabric/smarthomes/go", "language":"golang", "version": "v20.3", "channel": "mychannel"}
     ],
     "context": {
       "smallOperations": "mychannel",
@@ -93,8 +93,8 @@
   },
   "info" : {
     "Version": "1.2.0",
-    "Size": "2 Orgs with 1 Peer",
-    "Orderer": "Solo",
-    "Distribution": "Single Host"
+    "Size": "2 Orgs with 2 Peer",
+    "Orderer": "Kafka",
+    "Distribution": "Multiple hosts"
   }
 }

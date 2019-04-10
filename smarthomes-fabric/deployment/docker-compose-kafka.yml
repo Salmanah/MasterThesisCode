@@ -27,6 +27,28 @@ services:
           behave:
              aliases:
                - ${CORE_PEER_NETWORKID}
+    
+    ca2.example.com:
+        image: hyperledger/fabric-ca:1.2.0
+        environment:
+            - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+            - FABRIC_CA_SERVER_CA_NAME=ca2.example.com
+            - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
+            - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/70c2faa465d6c035935e9e79db647502dfad6e62b40843986f5702d8a8629fdb_sk
+        extra_hosts:
+            - "peer0.org1.example.com:158.39.77.41"
+            - "peer0.org2.example.com:158.39.77.152"
+            - "peer2.org1.example.com:158.39.77.131"
+        ports:
+            - "8054:7054"
+        command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+        volumes:
+            - ../crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+        container_name: ca2.example.com
+        networks:
+          behave:
+             aliases:
+               - ${CORE_PEER_NETWORKID}
 
     zookeeper0:
         extends:

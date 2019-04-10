@@ -41,7 +41,7 @@ module.exports.run = function() {
             Temperature: 30
         };
     } 
-    return bc.invokeSmartContract(contx, 'device', 'v10.6', args, 30);
+    return bc.invokeSmartContract(contx, 'device', 'v20.3', args, 30);
 };
 
 module.exports.end = function() {

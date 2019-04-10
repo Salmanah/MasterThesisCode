@@ -225,7 +225,7 @@ class Monitor {
             this._readDefaultStats(true);
 
             if(this.peers === null || this.peers.length === 0) {
-                logger.error('Failed to read monitoring data');
+                logger.error('Failed to read monitoring data FIRST');
                 return [];
             }
 
@@ -252,7 +252,7 @@ class Monitor {
             return defaultTable;
         }
         catch(err) {
-            logger.error('Failed to read monitoring data, ' + (err.stack ? err.stack : err));
+            logger.error('Failed to read monitoring data SECOND, ' + (err.stack ? err.stack : err));
             return [];
         }
     }
@@ -265,7 +265,7 @@ class Monitor {
             this._readDefaultStats(true);
 
             if(this.peers === null || this.peers.length === 0) {
-                logger.error('Failed to read monitoring data');
+                logger.error('Failed to read monitoring data THIRD');
                 return;
             }
 
@@ -294,7 +294,7 @@ class Monitor {
             logger.info('\n' + t);
         }
         catch(err) {
-            logger.error('Failed to read monitoring data, ' + (err.stack ? err.stack : err));
+            logger.error('Failed to read monitoring data FOURTH, ' + (err.stack ? err.stack : err));
         }
     }
 
