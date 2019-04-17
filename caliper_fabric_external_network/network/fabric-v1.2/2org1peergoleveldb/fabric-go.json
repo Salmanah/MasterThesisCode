@@ -6,7 +6,7 @@
     "cryptodir": "network/fabric-v1.2/config/crypto-config",
     "network": {
       "orderer": {
-        "url": "grpc://158.39.77.205:7050",
+        "url": "grpc://158.39.77.41:7050",
         "mspid": "OrdererMSP",
         "msp": "network/fabric-v1.2/config/crypto-config/ordererOrganizations/example.com/msp/",
         "server-hostname": "orderer.example.com",
@@ -17,18 +17,18 @@
         "mspid": "Org1MSP",
         "msp": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org1.example.com/msp/",
         "ca": {
-          "url": "http://158.39.77.205:7054",
+          "url": "http://158.39.77.41:7054",
           "name": "ca.example.com"
         },
         "peer0": {
-          "requests": "grpc://158.39.77.41:7051",
-          "events": "grpc://158.39.77.41:7053",
+          "requests": "grpc://158.39.77.131:7051",
+          "events": "grpc://158.39.77.131:7053",
           "server-hostname": "peer0.org1.example.com",
           "tls_cacerts": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
         },
         "peer1": {
-          "requests": "grpc://158.39.77.131:9051",
-          "events": "grpc://158.39.77.131:9053",
+          "requests": "grpc://158.39.77.205:9051",
+          "events": "grpc://158.39.77.205:9053",
           "server-hostname": "peer2.org1.example.com",
           "tls_cacerts": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt"
         }
@@ -38,7 +38,7 @@
         "mspid": "Org2MSP",
         "msp": "network/fabric-v1.2/config/crypto-config/peerOrganizations/org2.example.com/msp/",
         "ca": {
-          "url": "http://158.39.77.205:7054",
+          "url": "http://158.39.77.41:7054",
           "name": "ca2.example.com"
         },
         "peer0": {
@@ -74,13 +74,13 @@
     "channel": [
       {
         "name": "mychannel",
-        "deployed": true,
+        "deployed": false,
         "config": "network/fabric-v1.2/config/channel.tx",
         "organizations": ["org1","org2"]
       }
     ],
     "chaincodes": [
-      {"id": "device", "path": "contract/fabric/smarthomes/go", "language":"golang", "version": "v20.3", "channel": "mychannel"}
+      {"id": "device", "path": "contract/fabric/smarthomes/go", "language":"golang", "version": "v0.2", "channel": "mychannel"}
     ],
     "context": {
       "smallOperations": "mychannel",

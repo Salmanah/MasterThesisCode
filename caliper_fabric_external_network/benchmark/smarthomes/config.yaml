@@ -39,10 +39,10 @@ monitor:
   - docker
   docker:
     name:
-    - http://158.39.77.41:2376/peer0.org1.example.com
-    - http://158.39.77.131:2376/peer2.org1.example.com
+    - http://158.39.77.131:2376/peer0.org1.example.com
+    - http://158.39.77.205:2376/peer2.org1.example.com
     - http://158.39.77.152:2376/peer0.org2.example.com
-    - http://158.39.77.205:2376/orderer0.example.com
+    - http://158.39.77.41:2376/orderer0.example.com
   process:
   - command: node
     arguments: local-client.js
