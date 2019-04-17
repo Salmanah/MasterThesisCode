@@ -5,11 +5,31 @@ Organizations:
         Name: OrdererOrg
         ID: OrdererMSP
         MSPDir: ../crypto-config/ordererOrganizations/example.com/msp
+        Policies:
+            Readers: 
+                Type: Signature
+                Rule: "OR('OrdererMSP.member')"
+            Writers:
+                Type: Signature
+                Rule: "OR('OrdererMSP.member')"
+            Admins:
+                Type: Signature
+                Rule: "OR('OrdererMSO.admin')"
 
     - &Org1
         Name: Org1MSP
         ID: Org1MSP
         MSPDir: ../crypto-config/peerOrganizations/org1.example.com/msp
+        Policies: 
+            Readers:
+                Type: Signature
+                Rule: "OR('Org1MSP.admin','Org1MSP.peer','Org1MSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('Org1MSP.admin','Org1MSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('Org1MSP.admin')"
         AnchorPeers:
             - Host: peer0.org1.example.com
               Port: 7051
@@ -17,6 +37,16 @@ Organizations:
         Name: Org2MSP
         ID: Org2MSP
         MSPDir: ../crypto-config/peerOrganizations/org2.example.com/msp
+        Policies: 
+            Readers: 
+                Type: Signature
+                Rule: "OR('Org2MSP.admin','Org2MSp.peer','Org2MSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('Org2MSP.admin','Org2MSP.client')"
+            Admins: 
+                Type: Signature
+                Rule: "OR('Org2MSP.admin')"
         AnchorPeers:
             - Host: peer0.org2.example.com
               Port: 8051          
@@ -40,12 +70,70 @@ Orderer: &OrdererDefaults
             - kafka2:9092
             - kafka3:9092
     Organizations:
+
+    # Policies defines the set of policies at this level of the config tree
+    # For Orderer policies, their canonical path is
+    #   /Channel/Orderer/<PolicyName>
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        # BlockValidation specifies what signatures must be included in the block
+        # from the orderer for the peer to validate it.
+        BlockValidation:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+
+
 Application: &ApplicationDefaults
     Organizations:
+    Policies: 
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins: 
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+
+################################################################################
+#
+#   CHANNEL
+#
+#   This section defines the values to encode into a config transaction or
+#   genesis block for channel related parameters.
+#
+################################################################################
+Channel: &ChannelDefaults
+    # Policies defines the set of policies at this level of the config tree
+    # For Channel policies, their canonical path is
+    #   /Channel/<PolicyName>
+    Policies:
+        # Who may invoke the 'Deliver' API
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        # Who may invoke the 'Broadcast' API
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        # By default, who may modify elements at this config level
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
 
 Profiles:
 
     TwoOrgsOrdererGenesis:
+        <<: *ChannelDefaults
         Orderer:
             <<: *OrdererDefaults
             Organizations:
@@ -57,6 +145,7 @@ Profiles:
                     - *Org2
     TwoOrgsChannel:
         Consortium: SampleConsortium
+        <<: *ChannelDefaults
         Application:
             <<: *ApplicationDefaults
             Organizations:
@@ -64,6 +153,7 @@ Profiles:
                 - *Org2
 
     SampleDevModeKafka:
+        <<: *ChannelDefaults
         Orderer:
             <<: *OrdererDefaults
             OrdererType: kafka
