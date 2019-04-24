@@ -109,7 +109,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -458,7 +457,7 @@ func (t *SimpleChaincode) initEnvironment(stub shim.ChaincodeStubInterface) pb.R
 	}
 
 	reading2Bytes, err :=json.Marshal(reading2)
-	err = stub.PutPrivateData("collectionSmarthomesPrivate",device2.ID, readingBytes)
+	err = stub.PutPrivateData("collectionSmarthomesPrivate",device2.ID, reading2Bytes)
 
 	if err != nil {
 		fmt.Println("Could not store reading 2")

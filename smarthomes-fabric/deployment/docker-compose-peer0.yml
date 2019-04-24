@@ -5,7 +5,7 @@ networks:
     behave:
 
 services:
-    peer0.org2.example.com:
+    peer0.org1.example.com:
         extends:
             file: docker-compose-base.yml
             service: peer

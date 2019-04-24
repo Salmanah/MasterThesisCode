@@ -34,7 +34,7 @@ services:
             - ORDERER_GENERAL_LISTENPORT=7050
             - ORDERER_GENERAL_LEDGERTYPE=ram
             - ORDERER_GENERAL_GENESISMETHOD=file
-            - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/configs/genesis.block
+            - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/configs/orderer.block
             - CONFIGTX_ORDERER_ORDERERTYPE=kafka
             - CONFIGTX_ORDERER_BATCHSIZE_MAXMESSAGECOUNT=${CONFIGTX_ORDERER_BATCHSIZE_MAXMESSAGECOUNT}
             - CONFIGTX_ORDERER_BATCHTIMEOUT=${CONFIGTX_ORDERER_BATCHTIMEOUT}
@@ -49,7 +49,7 @@ services:
             #- ORDERER_TLS_CLIENTCERT_FILE=/var/hyperledger/users/Admin@example.com/tls/client.crt
             #- ORDERER_TLS_CLIENTKEY_FILE=/var/hyperledger/users/Admin@example.com/tls/client.key
         volumes:
-            - ../network-config/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+            - ../network-config/orderer.block:/var/hyperledger/orderer/orderer.block
             - ../crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/var/hyperledger/orderer/msp
             - ../crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/:/var/hyperledger/orderer/tls
         working_dir: /opt/gopath/src/github.com/hyperledger/fabric

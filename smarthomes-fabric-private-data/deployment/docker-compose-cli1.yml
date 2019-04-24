@@ -33,5 +33,6 @@ services:
         - $GOPATH/src/github.com/hyperledger/fabric/:/opt/gopath/src/github.com/hyperledger/fabric/
         - ../crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
         - ../crypto-config/ordererOrganizations/example.com/orderers/:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/
+        - ../network-config/:/opt/gopath/src/github.com/hyperledger/fabric/peer/network-config/
     networks:
         - behave
