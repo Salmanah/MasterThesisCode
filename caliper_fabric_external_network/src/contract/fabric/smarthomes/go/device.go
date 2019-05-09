@@ -17,91 +17,6 @@ specific language governing permissions and limitations
 under the License.
 */
 
-/*
-* NOTE: This implementation is a replica of the following:
-* https://github.com/hyperledger/fabric-samples/blob/release-1.1/chaincode/Devices02/node/Devices_chaincode.js
- */
-
-// ====CHAINCODE EXECUTION SAMPLES (CLI) ==================
-
-// ==== Invoke Devices ====
-// peer chaincode invoke -C myc1 -n Devices -c '{"Args":["initMarble","Device1","blue","35","tom"]}'
-// peer chaincode invoke -C myc1 -n Devices -c '{"Args":["initMarble","Device2","red","50","tom"]}'
-// peer chaincode invoke -C myc1 -n Devices -c '{"Args":["initMarble","Device3","blue","70","tom"]}'
-// peer chaincode invoke -C myc1 -n Devices -c '{"Args":["transferMarble","Device2","jerry"]}'
-// peer chaincode invoke -C myc1 -n Devices -c '{"Args":["transferMarblesBasedOnColor","blue","jerry"]}'
-// peer chaincode invoke -C myc1 -n Devices -c '{"Args":["delete","Device1"]}'
-
-// ==== Query Devices ====
-// peer chaincode query -C myc1 -n Devices -c '{"Args":["readMarble","Device1"]}'
-// peer chaincode query -C myc1 -n Devices -c '{"Args":["getMarblesByRange","Device1","Device3"]}'
-// peer chaincode query -C myc1 -n Devices -c '{"Args":["getHistoryForMarble","Device1"]}'
-
-// Rich Query (Only supported if CouchDB is used as state database):
-//   peer chaincode query -C myc1 -n Devices -c '{"Args":["queryMarblesByOwner","tom"]}'
-//   peer chaincode query -C myc1 -n Devices -c '{"Args":["queryMarbles","{\"selector\":{\"owner\":\"tom\"}}"]}'
-
-// INDEXES TO SUPPORT COUCHDB RICH QUERIES
-//
-// Indexes in CouchDB are required in order to make JSON queries efficient and are required for
-// any JSON query with a sort. As of Hyperledger Fabric 1.1, indexes may be packaged alongside
-// chaincode in a META-INF/statedb/couchdb/indexes directory. Each index must be defined in its own
-// text file with extension *.json with the index definition formatted in JSON following the
-// CouchDB index JSON syntax as documented at:
-// http://docs.couchdb.org/en/2.1.1/api/database/find.html#db-index
-//
-// This Devices02 example chaincode demonstrates a packaged
-// index which you can find in META-INF/statedb/couchdb/indexes/indexOwner.json.
-// For deployment of chaincode to production environments, it is recommended
-// to define any indexes alongside chaincode so that the chaincode and supporting indexes
-// are deployed automatically as a unit, once the chaincode has been installed on a peer and
-// instantiated on a channel. See Hyperledger Fabric documentation for more details.
-//
-// If you have access to the your peer's CouchDB state database in a development environment,
-// you may want to iteratively test various indexes in support of your chaincode queries.  You
-// can use the CouchDB Fauxton interface or a command line curl utility to create and update
-// indexes. Then once you finalize an index, include the index definition alongside your
-// chaincode in the META-INF/statedb/couchdb/indexes directory, for packaging and deployment
-// to managed environments.
-//
-// In the examples below you can find index definitions that support Devices02
-// chaincode queries, along with the syntax that you can use in development environments
-// to create the indexes in the CouchDB Fauxton interface or a curl command line utility.
-//
-
-//Example hostname:port configurations to access CouchDB.
-//
-//To access CouchDB docker container from within another docker container or from vagrant environments:
-// http://couchdb:5984/
-//
-//Inside couchdb docker container
-// http://127.0.0.1:5984/
-
-// Index for docType, owner.
-// Note that docType and owner fields must be prefixed with the "data" wrapper
-//
-// Index definition for use with Fauxton interface
-// {"index":{"fields":["data.docType","data.owner"]},"ddoc":"indexOwnerDoc", "name":"indexOwner","type":"json"}
-//
-// Example curl command line to define index in the CouchDB channel_chaincode database
-// curl -i -X POST -H "Content-Type: application/json" -d "{\"index\":{\"fields\":[\"data.docType\",\"data.owner\"]},\"name\":\"indexOwner\",\"ddoc\":\"indexOwnerDoc\",\"type\":\"json\"}" http://hostname:port/myc1_marbles/_index
-//
-
-// Index for docType, owner, size (descending order).
-// Note that docType, owner and size fields must be prefixed with the "data" wrapper
-//
-// Index definition for use with Fauxton interface
-// {"index":{"fields":[{"data.size":"desc"},{"data.docType":"desc"},{"data.owner":"desc"}]},"ddoc":"indexSizeSortDoc", "name":"indexSizeSortDesc","type":"json"}
-//
-// Example curl command line to define index in the CouchDB channel_chaincode database
-// curl -i -X POST -H "Content-Type: application/json" -d "{\"index\":{\"fields\":[{\"data.size\":\"desc\"},{\"data.docType\":\"desc\"},{\"data.owner\":\"desc\"}]},\"ddoc\":\"indexSizeSortDoc\", \"name\":\"indexSizeSortDesc\",\"type\":\"json\"}" http://hostname:port/myc1_marbles/_index
-
-// Rich Query with index design doc and index name specified (Only supported if CouchDB is used as state database):
-//   peer chaincode query -C myc1 -n marbles -c '{"Args":["queryMarbles","{\"selector\":{\"docType\":\"marble\",\"owner\":\"tom\"}, \"use_index\":[\"_design/indexOwnerDoc\", \"indexOwner\"]}"]}'
-
-// Rich Query with index design doc specified only (Only supported if CouchDB is used as state database):
-//   peer chaincode query -C myc1 -n marbles -c '{"Args":["queryMarbles","{\"selector\":{\"docType\":{\"$eq\":\"marble\"},\"owner\":{\"$eq\":\"tom\"},\"size\":{\"$gt\":0}},\"fields\":[\"docType\",\"owner\",\"size\"],\"sort\":[{\"size\":\"desc\"}],\"use_index\":\"_design/indexSizeSortDoc\"}"]}'
-
 package main
 
 import (
@@ -109,7 +24,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -121,7 +35,7 @@ type SimpleChaincode struct {
 }
 //Struct for a Home
 type Home struct {
-	ObjectType    string `json:"docType"` //docType is used to distinguish the various types of objects in state database
+	ObjectType    string `json:"Home"` //docType is used to distinguish the various types of objects in state database
 	ID            string `json:"id"`      //the fieldtags are needed to keep case from bouncing around
 	Owner         Owner `json:"owner"`
 	Address		  Address `json:"address"`
@@ -129,7 +43,7 @@ type Home struct {
 }
 
 type Owner struct{
-	ObjectType    string `json:"docType"` //docType is used to distinguish the various types of objects in state database
+	ObjectType    string `json:"Owner"` //docType is used to distinguish the various types of objects in state database
 	ID            string `json:"id"`
 	Firstname	  string `json:"firstname"`
 	Lastname	  string `json:"lastname"`	 
@@ -137,12 +51,15 @@ type Owner struct{
 
 //Struct for a device
 type Device struct{
-	ObjectType    string `json:"docType"` //docType is used to distinguish the various types of objects in state database
+	ObjectType    string `json:"Device"` //docType is used to distinguish the various types of objects in state database
 	ID            string `json:"id"`      //the fieldtags are needed to keep case from bouncing around
-	DeviceReading int `json:"deviceReading"`
-	MinimumTemp	  int `json:"minimumTemp"`
-	MaximumTemp	  int `json:"maximumTemp"`
-	Owner		  Owner	`json:"owner"`
+}
+
+type DeviceReading struct{
+	ID            	string `json:"id"`
+	Temperature 	string `json:"deviceReading"`
+	MinimumTemp	  	string `json:"minimumTemp"`
+	MaximumTemp	  	string `json:"maximumTemp"`
 }
 
 //Struct for an address
@@ -185,17 +102,12 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return t.sendDeviceReading(stub, args)	
 	 }else if function == "initEnvironment" {
 		return t.initEnvironment(stub)	
-	} else if function == "queryDeviceByOwner" { //find Devices for owner X using rich query
-		return t.queryDeviceByOwner(stub, args)
-	} else if function == "queryDevice" { //find Devices based on an ad hoc rich query
-		return t.queryDevice(stub, args)
-	} else if function == "getHistoryForDevice" { //get history of values for a Device
-		return t.getHistoryForDevice(stub, args)
 	}
 
 	fmt.Println("invoke did not find func: " + function) //error
 	return shim.Error("Received unknown function invocation")
 }
+
 
 // ============================================================
 // initMarble - create a new Device, store into chaincode state
@@ -203,10 +115,10 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 func (t *SimpleChaincode) initDevice(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var err error
 
-	//   0                 1           	2         		3          4   	
-	// "DeviceID", "deviceReading", "minimumTemp", "maximumTemp" "owner.id" 
-	if len(args) != 5 {
-		return shim.Error("Incorrect number of arguments. Expecting 4")
+	//   0             1  	      
+	// "DeviceID",  "home.id" 
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
 	}
 
 	// ==== Input sanitation ====
@@ -217,41 +129,10 @@ func (t *SimpleChaincode) initDevice(stub shim.ChaincodeStubInterface, args []st
 	if len(args[1]) <= 0 {
 		return shim.Error("2nd argument must be a non-empty string")
 	}
-	if len(args[2]) <= 0 {
-		return shim.Error("3rd argument must be a non-empty string")
-	}
-	if len(args[3]) <= 0 {
-		return shim.Error("4th argument must be a non-empty string")
-	}
-	if len(args[4]) <= 0 {
-		return shim.Error("5th argument must be a non-empty string")
-	}
 
 	id := args[0]
-	deviceReading, err := strconv.Atoi(args[1])
-	minimumTemp, err := strconv.Atoi(args[2])
-	maximumTemp, err:=strconv.Atoi(args[3])
-	ownerID := args[4]
-
-	var owner Owner
-
-	//Check if owner exists
-	ownerAsBytes, err := stub.GetState(ownerID)
-	if err != nil {
-		return shim.Error("Failed to get owner - "+ ownerID)
-	}
-
-	json.Unmarshal(ownerAsBytes, &owner)
-
-	if len(owner.Firstname) == 0 {
-		return shim.Error("Owner does not exist")
-	}
+	homeID := args[1]
 	
-	if err != nil {
-		return shim.Error("2rd argument must be a numeric string")
-	}
-
-
 	// ==== Check if device already exists ====
 	deviceAsBytes, err := stub.GetState(id)
 	if err != nil {
@@ -261,16 +142,49 @@ func (t *SimpleChaincode) initDevice(stub shim.ChaincodeStubInterface, args []st
 		return shim.Error("This device already exists: " + id)
 	}
 
-	// ==== Create device object and marshal to JSON ====
-	objectType := "device"
-	device := &Device{objectType, id, deviceReading,minimumTemp,maximumTemp,owner}
+	//Check if home exists
+	homeAsBytes, err := stub.GetState(homeID)
+	if err != nil{
+		return shim.Error("Failed to get home error - "+homeID)
+	}
+
+	if homeAsBytes == nil{
+		fmt.Println("Home does not exist - " + homeID)
+		fmt.Println(homeAsBytes)
+		return shim.Error("Home does not exist -" + homeID)
+	}
+	
+	res:= &Home{}
+	json.Unmarshal(homeAsBytes, &res)
+
+	// ==== Create device object ====
+	objectType := "Device"
+	device := Device{
+		ObjectType: objectType,
+		ID: id,
+	}
+
+	//Add device to home
+
+	res.Devices = append(res.Devices, device)
+	homeJSONBytes, err := json.Marshal(res)
+
+	if err != nil{
+		return shim.Error("Marshaling home to add device failed in initDevice")
+	}
+
+	err = stub.PutState(res.ID,homeJSONBytes)
+
+	if err != nil{
+		return shim.Error("Failed to add device to home in initDevice")
+	}
+
+	// ===== Marshal device object ======
 	deviceJSONasBytes, err := json.Marshal(device)
+
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	//Alternatively, build the Device json string manually if you don't want to use struct marshalling
-	//DeviceJSONasString := `{"docType":"Marble",  "name": "` + DeviceName + `", "color": "` + color + `", "size": ` + strconv.Itoa(size) + `, "owner": "` + owner + `"}`
-	//DeviceJSONasBytes := []byte(str)
 
 	// === Save Device to state ===
 	err = stub.PutState(id, deviceJSONasBytes)
@@ -278,25 +192,12 @@ func (t *SimpleChaincode) initDevice(stub shim.ChaincodeStubInterface, args []st
 		return shim.Error(err.Error())
 	}
 
-	//  ==== Index the Device to enable color-based range queries, e.g. return all blue Devices ====
-	//  An 'index' is a normal key/value entry in state.
-	//  The key is a composite key, with the elements that you want to range query on listed first.
-	//  In our case, the composite key is based on indexName~color~name.
-	//  This will enable very efficient state range queries based on composite keys matching indexName~color~*
-	indexName := "id~owner"
-	deviceNameIndexKey, err := stub.CreateCompositeKey(indexName, []string{device.ID, device.Owner.ID})
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-	//  Save index entry to state. Only the key name is needed, no need to store a duplicate copy of the Device.
-	//  Note - passing a 'nil' value will effectively delete the key from state, therefore we pass null character as value
-	value := []byte{0x00}
-	stub.PutState(deviceNameIndexKey, value)
 
-	// ==== Marble saved and indexed. Return success ====
+	// ==== Device saved. Return success ====
 	fmt.Println("- end init device")
-	return shim.Success(nil)
+	return shim.Success(deviceJSONasBytes)
 }
+
 
 func (t *SimpleChaincode) sendDeviceReading(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var err error
@@ -310,15 +211,54 @@ func (t *SimpleChaincode) sendDeviceReading(stub shim.ChaincodeStubInterface, ar
 		return shim.Error("Second argument must be a non-empty string (Temperature)")
 	}
 	
-	device, err := loadDevice(stub, args[0])
+	id:= args[0]
+	temperature := args[1]
+	
+	deviceAsBytes, err := stub.GetState(id)
 	if err != nil{
 		return shim.Error("Failed to get device:")
 	}
 
-	temperature, err := strconv.Atoi(args[1])
-	
-	device.DeviceReading = temperature
-	err = saveDevice(stub,device)
+	if deviceAsBytes == nil{
+		return shim.Error("SendDeviceReading device does not exist "+id)
+	}
+
+	readingAsBytes, err := stub.GetState(id+"-Reading")
+	if err != nil{
+		return shim.Error("Failed to get deviceReading - "+id)
+	}
+
+	if readingAsBytes == nil{
+		reading := DeviceReading{
+			ID: id+"-Reading",
+			Temperature: temperature,
+		}
+
+		readingJSONBytes, err := json.Marshal(reading)
+		if err != nil{
+			return shim.Error("Marshaling readings failed - "+id)
+		}
+		err = stub.PutState(id+"-Reading",readingJSONBytes)
+
+		if err != nil{
+			shim.Error("Failed to add readings to the blockchain - "+id+"-Reading")
+		}
+
+	}
+
+	res := DeviceReading{}
+	json.Unmarshal(readingAsBytes, &res)
+
+	res.ID = id+"-Reading"
+	res.Temperature = temperature
+
+	readingJSONBytes, err := json.Marshal(res)
+
+	if err != nil{
+		shim.Error("Marshaling readings failed step 2 -"+id+"-Reading")
+	}
+
+	err = stub.PutState(res.ID, readingJSONBytes)
 	if err != nil{
 		return shim.Error("Failed to save device")
 	}
@@ -327,8 +267,9 @@ func (t *SimpleChaincode) sendDeviceReading(stub shim.ChaincodeStubInterface, ar
 }
 
 // ===============================================
-// initEnvironment - creates 2 Homes, 2 devices and 2 Owners
+// initEnvironment - creates 2 Homes, 2 devices and 2 Owners 
 // ===============================================
+
 
 func (t *SimpleChaincode) initEnvironment(stub shim.ChaincodeStubInterface) pb.Response {
 	var err error
@@ -358,34 +299,32 @@ func (t *SimpleChaincode) initEnvironment(stub shim.ChaincodeStubInterface) pb.R
 		City: "Oslo",
 	}
 
-
 	device1 := &Device{
 		ObjectType: "Device",
 		ID: "DEVICE_001",
-		DeviceReading: 30,
-		MinimumTemp: 15,
-		MaximumTemp: 40,
-		Owner: Owner{
-			ID: owner1.ID,
-			Firstname: owner1.Firstname,
-			Lastname: owner1.Lastname, 
-		},
+	
+	}
+
+	reading1 :=&DeviceReading{
+		ID: "DEVICE_001-Reading",
+		Temperature: "30",
+		MinimumTemp: "15",
+		MaximumTemp: "40",
 	}
 
 
 	device2 := &Device{
 		ObjectType: "Device",
 		ID: "DEVICE_002",
-		DeviceReading: 50,
-		MinimumTemp: 25,
-		MaximumTemp: 60,
-		Owner: Owner{
-			ID: owner2.ID,
-			Firstname: owner2.Firstname,
-			Lastname: owner2.Lastname, 
-		},
 	}
-	
+
+	reading2 :=&DeviceReading{
+		ID: "DEVICE_002-Reading",
+		Temperature: "40",
+		MinimumTemp: "25",
+		MaximumTemp: "60",
+	}
+
 	home1 := &Home{
 		ObjectType: "Home",
 		ID: "HOME_001",
@@ -401,10 +340,6 @@ func (t *SimpleChaincode) initEnvironment(stub shim.ChaincodeStubInterface) pb.R
 		Devices: []Device{
 			Device{
 				ID: device1.ID,
-				DeviceReading: device1.DeviceReading,
-				MinimumTemp: device1.MinimumTemp,
-				MaximumTemp: device1.MaximumTemp,
-				Owner: device1.Owner,
 			},
 		},
 	}
@@ -424,64 +359,109 @@ func (t *SimpleChaincode) initEnvironment(stub shim.ChaincodeStubInterface) pb.R
 		Devices: []Device{
 			Device{
 				ID: device2.ID,
-				DeviceReading: device2.DeviceReading,
-				MinimumTemp: device2.MinimumTemp,
-				MaximumTemp: device2.MaximumTemp,
-				Owner: device2.Owner,
 			},
 		},
 	}
 
+
 	ownerBytes, err :=json.Marshal(owner1)
+	if err != nil{
+		return shim.Error(err.Error())
+	}
 	err = stub.PutState(owner1.ID, ownerBytes)
 
 	if err != nil {
-		fmt.Println("Could not store owner")
+		fmt.Println("Could not store owner 1")
 		return shim.Error(err.Error())
 	}
 
-	owner2Bytes, err :=json.Marshal(owner2)
-	err = stub.PutState(owner2.ID, owner2Bytes)
+	owner2Bytes, err2 :=json.Marshal(owner2)
 
-	if err != nil {
-		fmt.Println("Could not store owner")
-		return shim.Error(err.Error())
+	if err != nil{
+		return shim.Error(err2.Error())
+	}
+	err2 = stub.PutState(owner2.ID, owner2Bytes)
+
+	if err2 != nil {
+		fmt.Println("Could not store owner 2")
+		return shim.Error(err2.Error())
 	}
 
-	deviceBytes, err :=json.Marshal(device1)
-	err = stub.PutState(device1.ID, deviceBytes)
+	deviceBytes, err3 :=json.Marshal(device1)
 
-	if err != nil {
-		fmt.Println("Could not store device")
-		return shim.Error(err.Error())
+	if err3 != nil{
+		return shim.Error(err3.Error())
+	}
+	err3 = stub.PutState(device1.ID, deviceBytes)
+
+	if err3 != nil {
+		fmt.Println("Could not store device 1")
+		return shim.Error(err3.Error())
 	}
 
-	device2Bytes, err :=json.Marshal(device2)
-	err = stub.PutState(device2.ID, device2Bytes)
+	readingBytes, err4 :=json.Marshal(reading1)
 
-	if err != nil {
-		fmt.Println("Could not store device")
-		return shim.Error(err.Error())
+	if err4 != nil{
+		return shim.Error(err4.Error())
+	}
+	err4 = stub.PutState(reading1.ID, readingBytes)
+
+	if err4 != nil {
+		fmt.Println("Could not store reading 1")
+		return shim.Error(err4.Error())
 	}
 
-	homeBytes, err :=json.Marshal(home1)
-	err = stub.PutState(home1.ID, homeBytes)
+	device2Bytes, err5 :=json.Marshal(device2)
 
-	if err != nil {
-		fmt.Println("Could not store home")
-		return shim.Error(err.Error())
+	if err5 != nil{
+		return shim.Error(err4.Error())
+	}
+	err5 = stub.PutState(device2.ID, device2Bytes)
+
+	if err5 != nil {
+		fmt.Println("Could not store device 2")
+		return shim.Error(err5.Error())
 	}
 
-	home2Bytes, err :=json.Marshal(home2)
-	err = stub.PutState(home2.ID, home2Bytes)
+	reading2Bytes, err6 :=json.Marshal(reading2)
 
-	if err != nil {
-		fmt.Println("Could not store home")
-		return shim.Error(err.Error())
+	if err6 != nil{
+		return shim.Error(err6.Error())
+	}
+	err6 = stub.PutState(reading2.ID, reading2Bytes)
+
+	if err6 != nil {
+		fmt.Println("Could not store reading 2")
+		return shim.Error(err6.Error())
+	}
+
+	homeBytes, err7 :=json.Marshal(home1)
+
+	if err7 != nil {
+		return shim.Error(err7.Error())
+	}
+	err7 = stub.PutState(home1.ID, homeBytes)
+
+	if err7 != nil {
+		fmt.Println("Could not store home 1")
+		return shim.Error(err7.Error())
+	}
+
+	home2Bytes, err8 :=json.Marshal(home2)
+
+	if err8 != nil{
+		return shim.Error(err8.Error())
+	}
+	err8 = stub.PutState(home2.ID, home2Bytes)
+
+	if err8 != nil {
+		fmt.Println("Could not store home 2")
+		return shim.Error(err8.Error())
 	}
 	fmt.Printf("Environment created!")
-	return shim.Success(deviceBytes)
+	return shim.Success(homeBytes)
 }
+
 
 // ===============================================
 // readDevice - read a device from chaincode state
@@ -496,6 +476,7 @@ func (t *SimpleChaincode) readDevice(stub shim.ChaincodeStubInterface, args []st
 
 	id = args[0]
 	valAsbytes, err := stub.GetState(id) //get the Device from chaincode state
+	
 	if err != nil {
 		jsonResp = "{\"Error\":\"Failed to get state for " + id + "\"}"
 		return shim.Error(jsonResp)
@@ -506,6 +487,67 @@ func (t *SimpleChaincode) readDevice(stub shim.ChaincodeStubInterface, args []st
 
 	return shim.Success(valAsbytes)
 }
+
+// ===============================================
+// readTemperature - read a device temperature stats
+// ===============================================
+func (t *SimpleChaincode) readTemperature(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	var id, jsonResp string
+	var err error
+
+	// 0
+	// readingID
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting ID of the device to query")
+	}
+
+	id = args[0]+"-Reading"
+	valAsbytes, err := stub.GetState(id) //get the Temperature from chaincode state
+	
+	if err != nil {
+		jsonResp = "{\"Error\":\"Failed to get state for " + id + "\"}"
+		return shim.Error(jsonResp)
+	} else if valAsbytes == nil {
+		jsonResp = "{\"Error\":\"Device does not exist: " + id + "\"}"
+		return shim.Error(jsonResp)
+	}
+
+	return shim.Success(valAsbytes)
+}
+
+// ===============================================
+// readHomeDevice - read all devices of a home
+// ===============================================
+func (t *SimpleChaincode) readHomeDevice(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	var id, jsonResp string
+	var err error
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting ID of the Home to query")
+	}
+
+	id = args[0]
+	valAsbytes, err := stub.GetState(id) //get the Home from chaincode state
+	if err != nil {
+		jsonResp = "{\"Error\":\"Failed to get state for " + id + "\"}"
+		return shim.Error(jsonResp)
+	} else if valAsbytes == nil {
+		jsonResp = "{\"Error\":\"Home does not exist: " + id + "\"}"
+		return shim.Error(jsonResp)
+	}
+
+	res := &Home{}
+	json.Unmarshal(valAsbytes,&res)
+
+	fmt.Println("%#v",res.Devices)
+
+	return shim.Success(valAsbytes)
+}
+
+
+
+
 
 // ==================================================
 // delete - remove a Device key/value pair from state
@@ -541,7 +583,7 @@ func (t *SimpleChaincode) delete(stub shim.ChaincodeStubInterface, args []string
 
 	// maintain the index
 	indexName := "id~owner"
-	colorNameIndexKey, err := stub.CreateCompositeKey(indexName, []string{deviceJSON.ID, deviceJSON.Owner.ID})
+	colorNameIndexKey, err := stub.CreateCompositeKey(indexName, []string{deviceJSON.ID})
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -554,67 +596,7 @@ func (t *SimpleChaincode) delete(stub shim.ChaincodeStubInterface, args []string
 	return shim.Success(nil)
 }
 
-// =======Rich queries =========================================================================
-// Two examples of rich queries are provided below (parameterized query and ad hoc query).
-// Rich queries pass a query string to the state database.
-// Rich queries are only supported by state database implementations
-//  that support rich query (e.g. CouchDB).
-// The query string is in the syntax of the underlying state database.
-// With rich queries there is no guarantee that the result set hasn't changed between
-//  endorsement time and commit time, aka 'phantom reads'.
-// Therefore, rich queries should not be used in update transactions, unless the
-// application handles the possibility of result set changes between endorsement and commit time.
-// Rich queries can be used for point-in-time queries against a peer.
-// ============================================================================================
 
-// ===== Example: Parameterized rich query =================================================
-// queryMarblesByOwner queries for Devices based on a passed in owner.
-// This is an example of a parameterized query where the query logic is baked into the chaincode,
-// and accepting a single query parameter (owner).
-// Only available on state databases that support rich query (e.g. CouchDB)
-// =========================================================================================
-func (t *SimpleChaincode) queryDeviceByOwner(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-
-	//   0
-	// "bob"
-	if len(args) < 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
-	}
-
-	owner := strings.ToLower(args[0])
-
-	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"device\",\"owner\":\"%s\"}}", owner)
-
-	queryResults, err := getQueryResultForQueryString(stub, queryString)
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-	return shim.Success(queryResults)
-}
-
-// ===== Example: Ad hoc rich query ========================================================
-// queryMarbles uses a query string to perform a query for Devices.
-// Query string matching state database syntax is passed in and executed as is.
-// Supports ad hoc queries that can be defined at runtime by the client.
-// If this is not desired, follow the queryMarblesForOwner example for parameterized queries.
-// Only available on state databases that support rich query (e.g. CouchDB)
-// =========================================================================================
-func (t *SimpleChaincode) queryDevice(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-
-	//   0
-	// "queryString"
-	if len(args) < 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
-	}
-
-	queryString := args[0]
-
-	queryResults, err := getQueryResultForQueryString(stub, queryString)
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-	return shim.Success(queryResults)
-}
 
 func (t *SimpleChaincode) getHistoryForDevice(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 
@@ -681,51 +663,7 @@ func (t *SimpleChaincode) getHistoryForDevice(stub shim.ChaincodeStubInterface, 
 	return shim.Success(buffer.Bytes())
 }
 
-// =========================================================================================
-// getQueryResultForQueryString executes the passed in query string.
-// Result set is built and returned as a byte array containing the JSON results.
-// =========================================================================================
-func getQueryResultForQueryString(stub shim.ChaincodeStubInterface, queryString string) ([]byte, error) {
 
-	fmt.Printf("- getQueryResultForQueryString queryString:\n%s\n", queryString)
-
-	resultsIterator, err := stub.GetQueryResult(queryString)
-	if err != nil {
-		return nil, err
-	}
-	defer resultsIterator.Close()
-
-	// buffer is a JSON array containing QueryRecords
-	var buffer bytes.Buffer
-	buffer.WriteString("[")
-
-	bArrayMemberAlreadyWritten := false
-	for resultsIterator.HasNext() {
-		queryResponse, err := resultsIterator.Next()
-		if err != nil {
-			return nil, err
-		}
-		// Add a comma before array members, suppress it for the first array member
-		if bArrayMemberAlreadyWritten == true {
-			buffer.WriteString(",")
-		}
-		buffer.WriteString("{\"Key\":")
-		buffer.WriteString("\"")
-		buffer.WriteString(queryResponse.Key)
-		buffer.WriteString("\"")
-
-		buffer.WriteString(", \"Record\":")
-		// Record is a JSON object, so we write as-is
-		buffer.WriteString(string(queryResponse.Value))
-		buffer.WriteString("}")
-		bArrayMemberAlreadyWritten = true
-	}
-	buffer.WriteString("]")
-
-	fmt.Printf("- getQueryResultForQueryString queryResult:\n%s\n", buffer.String())
-
-	return buffer.Bytes(), nil
-}
 
 func loadDevice(stub shim.ChaincodeStubInterface, id string) (*Device, error){
 	deviceID := id
@@ -749,3 +687,4 @@ func saveDevice(stub shim.ChaincodeStubInterface, device *Device) error {
 	id := device.ID
 	return stub.PutState(id, deviceBytes)
 }
+

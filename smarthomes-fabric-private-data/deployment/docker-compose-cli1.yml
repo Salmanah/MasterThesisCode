@@ -6,7 +6,7 @@ networks:
 services:
   cli:
     container_name: cli
-    image: hyperledger/fabric-tools:1.2.0
+    image: hyperledger/fabric-tools:1.3.0
     tty: true
     environment:
       - GOPATH=/opt/gopath
@@ -32,7 +32,7 @@ services:
         - ../chaincode/:/opt/gopath/src/github.com/chaincode
         - $GOPATH/src/github.com/hyperledger/fabric/:/opt/gopath/src/github.com/hyperledger/fabric/
         - ../crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
-        - ../crypto-config/ordererOrganizations/example.com/orderers/:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/
+        #- ../crypto-config/ordererOrganizations/example.com/orderers/:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/
         - ../network-config/:/opt/gopath/src/github.com/hyperledger/fabric/peer/network-config/
     networks:
         - behave

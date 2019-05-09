@@ -23,25 +23,14 @@ test:
       opts:
         tps: 5
     callback: benchmark/smarthomes/query.js
-  - label: sendReading
-    txNumber:
-    - 5
-    rateControl:
-    - type: fixed-rate
-      opts:
-        tps: 5
-    - type: fixed-rate
-      opts:
-        tps: 5
-    callback: benchmark/smarthomes/sendReading.js  
 monitor:
   type:
   - docker
   docker:
     name:
-    - http://158.39.77.131:2376/peer0.org1.example.com
-    - http://158.39.77.205:2376/peer2.org1.example.com
-    - http://158.39.77.152:2376/peer0.org2.example.com
+    - http://158.39.77.58:2376/peer0.org1.example.com
+    - http://158.39.77.152:2376/peer1.org1.example.com
+    - http://158.39.77.131:2376/peer0.org2.example.com
     - http://158.39.77.41:2376/orderer0.example.com
   process:
   - command: node

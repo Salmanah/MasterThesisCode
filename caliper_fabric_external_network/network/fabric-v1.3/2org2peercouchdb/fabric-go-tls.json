@@ -1,38 +1,34 @@
 {
   "caliper": {
-    "blockchain": "fabric",
-    "command" : {
-      "start": "docker-compose -f network/fabric-v1.3/2org2peercouchdb/docker-compose-tls.yaml up -d;sleep 3s",
-      "end" : "docker-compose -f network/fabric-v1.3/2org2peercouchdb/docker-compose-tls.yaml down;docker rm $(docker ps -aq);docker rmi $(docker images dev* -q)"
-    }
+    "blockchain": "fabric"
   },
   "fabric": {
     "cryptodir": "network/fabric-v1.3/config/crypto-config",
     "network": {
       "orderer": {
-        "url": "grpcs://localhost:7050",
+        "url": "grpcs://158.39.77.41:7050",
         "mspid": "OrdererMSP",
         "msp": "network/fabric-v1.3/config/crypto-config/ordererOrganizations/example.com/msp/",
-        "server-hostname": "orderer.example.com",
-        "tls_cacerts": "network/fabric-v1.3/config/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt"
+        "server-hostname": "orderer0.example.com",
+        "tls_cacerts": "network/fabric-v1.3/config/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/ca.crt"
       },
       "org1": {
-        "name": "peerOrg1",
+        "name": "Org1",
         "mspid": "Org1MSP",
         "msp": "network/fabric-v1.3/config/crypto-config/peerOrganizations/org1.example.com/msp/",
         "ca": {
-          "url": "https://localhost:7054",
-          "name": "ca.org1.example.com"
+          "url": "https://158.39.77.41:7054",
+          "name": "ca.example.com"
         },
-        "peer1": {
-          "requests": "grpcs://localhost:7051",
-          "events": "grpcs://localhost:7053",
+        "peer0": {
+          "requests": "grpcs://158.39.77.58:7051",
+          "events": "grpcs://158.39.77.58:7053",
           "server-hostname": "peer0.org1.example.com",
           "tls_cacerts": "network/fabric-v1.3/config/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
         },
-        "peer2": {
-          "requests": "grpcs://localhost:7057",
-          "events": "grpcs://localhost:7059",
+        "peer1": {
+          "requests": "grpcs://158.39.77.152:9051",
+          "events": "grpcs://158.39.77.152:9053",
           "server-hostname": "peer1.org1.example.com",
           "tls_cacerts": "network/fabric-v1.3/config/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt"
         }
@@ -42,20 +38,14 @@
         "mspid": "Org2MSP",
         "msp": "network/fabric-v1.3/config/crypto-config/peerOrganizations/org2.example.com/msp/",
         "ca": {
-          "url": "https://localhost:8054",
-          "name": "ca.org2.example.com"
+          "url": "https://158.39.77.41:8054",
+          "name": "ca2.example.com"
         },
-        "peer1": {
-          "requests": "grpcs://localhost:8051",
-          "events": "grpcs://localhost:8053",
+        "peer0": {
+          "requests": "grpcs://158.39.77.131:8051",
+          "events": "grpcs://158.39.77.131:8053",
           "server-hostname": "peer0.org2.example.com",
           "tls_cacerts": "network/fabric-v1.3/config/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt"
-        },
-        "peer2": {
-          "requests": "grpcs://localhost:8057",
-          "events": "grpcs://localhost:8059",
-          "server-hostname": "peer1.org2.example.com",
-          "tls_cacerts": "network/fabric-v1.3/config/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt"
         }
       }
     },
@@ -63,15 +53,12 @@
       {
         "name": "mychannel",
         "deployed": false,
-        "config": "network/fabric-v1.3/config/mychannel.tx",
+        "config": "network/fabric-v1.3/config/channel.tx",
         "organizations": ["org1", "org2"]
       }
     ],
     "chaincodes": [
-      {"id": "drm", "path": "contract/fabric/drm", "language":"golang", "version": "v0", "channel": "mychannel"},
-      {"id": "marbles", "path": "contract/fabric/marbles/go", "language":"golang", "version": "v1", "channel": "mychannel", "metadataPath": "src/contract/fabric/marbles/go/metadata"},
-      {"id": "simple", "path": "contract/fabric/simple/go", "language":"golang", "version": "v0", "channel": "mychannel"},
-      {"id": "smallbank", "path": "contract/fabric/smallbank", "language":"golang", "version": "v0", "channel": "mychannel"}
+      {"id": "devicep", "path": "contract/fabric/smarthomes-private/go", "language":"golang", "version": "0.1", "channel": "mychannel"}
     ],
     "endorsement-policy": {
       "identities": [

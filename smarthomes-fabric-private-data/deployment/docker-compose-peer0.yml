@@ -27,8 +27,8 @@ services:
             - ../crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/var/hyperledger/msp
             - ../crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/var/hyperledger/tls
             - ../crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com:/var/hyperledger/users/Admin@org1.example.com
-            - ../crypto-config/ordererOrganizations/example.com/orderers:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers
-            - ../crypto-config/peerOrganizations:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations
+            #- ../crypto-config/ordererOrganizations/example.com/orderers:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers
+            #- ../crypto-config/peerOrganizations:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations
             - ../network-config/:/var/hyperledger/configs
 
         extra_hosts:
@@ -36,8 +36,8 @@ services:
             - "orderer1.example.com:158.39.77.41"
             - "orderer2.example.com:158.39.77.41"
             - "ca.example.com:158.39.77.41"
-            - "peer0.org2.example.com:158.39.77.152"
-            - "peer1.org1.example.com:158.39.77.205"
+            - "peer0.org2.example.com:158.39.77.131"
+            - "peer1.org1.example.com:158.39.77.152"
         networks:
           behave:
              aliases:

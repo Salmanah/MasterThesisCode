@@ -44,7 +44,7 @@ module.exports.run = function() {
     }
 
     // TODO: until Fabric query is implemented, use invoke
-    return bc.invokeSmartContract(contx, 'device', 'v0.1', args, 120);
+    return bc.invokeSmartContract(contx, 'devicep', '0.1', args, 120);
 };
 
 module.exports.end = function() {
