@@ -6,10 +6,13 @@ Organizations:
         ID: OrdererMSP
         MSPDir: ../crypto-config/ordererOrganizations/example.com/msp
 
+
     - &Org1
         Name: Org1MSP
         ID: Org1MSP
         MSPDir: ../crypto-config/peerOrganizations/org1.example.com/msp
+
+
         AnchorPeers:
             - Host: peer0.org1.example.com
               Port: 7051
@@ -17,17 +20,25 @@ Organizations:
         Name: Org2MSP
         ID: Org2MSP
         MSPDir: ../crypto-config/peerOrganizations/org2.example.com/msp
+
         AnchorPeers:
             - Host: peer0.org2.example.com
               Port: 8051          
 
-Orderer: &OrdererDefaults
+Capabilities:
+    Global: &ChannelCapabilities
+        V1_3: true
+    Orderer: &OrdererCapabilities
+        V1_1: true
+    Application: &ApplicationCapabilities
+        V1_3: true
+        V1_2: false
+        V1_1: false
 
-    OrdererType: kafka
+Orderer: &OrdererDefaults
+    OrdererType: solo
     Addresses:
         - orderer0.example.com:7050
-        - orderer1.example.com:7050
-        - orderer2.example.com:7050
     BatchTimeout: 2s
     BatchSize:
         MaxMessageCount: 10
@@ -36,20 +47,27 @@ Orderer: &OrdererDefaults
     Kafka:
         Brokers:
             - kafka0:9092
-            - kafka1:9092
-            - kafka2:9092
-            - kafka3:9092
     Organizations:
+
+
 Application: &ApplicationDefaults
     Organizations:
 
-Profiles:
 
+Channel: &ChannelDefaults
+
+    Capabilities:
+        <<: *ChannelCapabilities
+
+Profiles:
     TwoOrgsOrdererGenesis:
+        <<: *ChannelDefaults
         Orderer:
             <<: *OrdererDefaults
             Organizations:
                 - *OrdererOrg
+            Capabilities:
+                <<: *OrdererCapabilities
         Consortiums:
             SampleConsortium:
                 Organizations:
@@ -57,29 +75,11 @@ Profiles:
                     - *Org2
     TwoOrgsChannel:
         Consortium: SampleConsortium
+        <<: *ChannelDefaults
         Application:
             <<: *ApplicationDefaults
             Organizations:
                 - *Org1
                 - *Org2
-
-    SampleDevModeKafka:
-        Orderer:
-            <<: *OrdererDefaults
-            OrdererType: kafka
-            Kafka:
-                Brokers:
-                - kafka0:9092
-                - kafka1:9092
-                - kafka2:9092
-                - kafka3:9092
-
-            Organizations:
-            - *OrdererOrg
-            Organizations:
-            - <<: *OrdererOrg
-        Consortiums:
-            SampleConsortium:
-                Organizations:
-                - *Org1
-                - *Org2
+            Capabilities:
+                <<: *ApplicationCapabilities

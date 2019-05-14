@@ -296,23 +296,20 @@ func (t *SimpleChaincode) initHomePrivate(stub shim.ChaincodeStubInterface, args
 	id:= args[0]
 	ownerID := args[1]
 	devices := []Device{}
+	
 
 	//Check if owner exists
 	ownerAsBytes, err := stub.GetPrivateData("collectionSmarthomes",ownerID)
 	if err != nil {
 		return shim.Error("Failed to get owner - "+ ownerID)
 	}
+	newOwner := &Owner{}
+	json.Unmarshal(ownerAsBytes,&newOwner)
 
-	if ownerAsBytes != nil{
-		return shim.Error("Owner does exist")
+	if newOwner == nil{
+		return shim.Error("Owner does not exist")
 	}
 
-	newOwner := Owner{
-		ObjectType :"Owner",
-		ID: "OWNER_4",
-		Firstname: "New guy",
-		Lastname: "Derek",
-	}
 
 	//Check if home exists
 	homeAsBytes, err3 := stub.GetPrivateData("collectionSmarthomes",id)
@@ -324,10 +321,15 @@ func (t *SimpleChaincode) initHomePrivate(stub shim.ChaincodeStubInterface, args
 		return shim.Error("Home does exist")
 	}
 
-	newHome := &Home{
+	newHome := Home{
 		ObjectType: "Home",
 		ID: id,
-		Owner: newOwner,
+		Owner: Owner{
+			ObjectType: newOwner.ObjectType,
+			ID: newOwner.ID,
+			Firstname: newOwner.Firstname,
+			Lastname: newOwner.Lastname,
+		},
 		Address: Address{
 			Street: "Problemveien 35b",
 			City: "Oslo",
