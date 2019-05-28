@@ -1,0 +1,19 @@
+[
+    {
+        "name": "collectionSmarthomes",
+        "policy": "OR('Org1MSP.member', 'Org2MSP.member')",
+        "requredPeerCount": 0,
+        "maxPeerCount": 2, 
+        "blockToLive": 5,
+        "memberOnlyRead": true
+
+    },
+    {
+        "name":"collectionSmarthomesPrivate",
+        "policy": "OR('Org1MSP.member')",
+        "requredPeerCount": 0, 
+        "maxPeerCount": 2,
+        "blockToLive": 5,
+        "memberOnlyRead": true
+    }
+]

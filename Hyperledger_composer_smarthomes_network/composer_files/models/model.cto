@@ -17,6 +17,8 @@ namespace org.blockchain.model
 
 /**
  *A participant of type home in the network
+ * Home consist of the identifier homeId
+ * and the variables needed for information
  */
 participant Home identified by homeId {
   o   String homeId
@@ -31,6 +33,12 @@ participant Home identified by homeId {
 participant Service identified by serviceId{
   o   String serviceId
   o   String serviceName
+}
+
+asset randomAsset identified by assetId{
+  o   String        assetId
+  o   Double           assetValue
+  --> RandomOwner   assetOwner
 }
 
 /**
@@ -64,7 +72,8 @@ concept Address{
   o String  city
 }
 
-transaction DeviceReading extends DeviceTransaction{
+transaction DeviceReading{
+  --> Device device
   	o	Double	temperature
     o	String	readingTime
     o	String	readingDate

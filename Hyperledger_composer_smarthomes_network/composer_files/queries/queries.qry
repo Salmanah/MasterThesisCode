@@ -3,17 +3,18 @@
 */
 
 
-query selectDevices{
+query simpleQuery{
   description: "Select all devices"
   statement:
       SELECT org.blockchain.model.Device
+      WHERE (deviceLocation == "kitchen")
 }
 
-query selectDevicesThreshold{
+query parameterQuery{
   description: "Select devices that have reached a threshold"
   statement:
-      SELECT org.blockchain.model.Device
-          WHERE (deviceReadings CONTAINS 35)
+      SELECT org.blockchain.model.DeviceReading
+          WHERE (_$temp_param < temperature)
 }
 
 query selectHomes{
