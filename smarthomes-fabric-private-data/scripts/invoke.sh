@@ -7,3 +7,4 @@ export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/orde
 
 
 docker exec -it cli peer chaincode invoke -o orderer0.example.com:7050 -n devicep -c '{"Args":["initEnvironment"]}' -C mychannel --tls --cafile $ORDERER_CA
+

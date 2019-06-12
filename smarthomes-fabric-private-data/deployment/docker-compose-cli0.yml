@@ -22,9 +22,9 @@ services:
       - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
       - CORE_CHAINCODE_KEEPALIVE=10
     extra_hosts:
-      - "orderer0.example.com:158.39.77.41"
-      - "orderer1.example.com:158.39.77.41"
-      - "orderer2.example.com:158.39.77.41"
+      - "orderer0.example.com:158.39.48.98"
+      - "orderer1.example.com:158.39.48.98"
+      - "orderer2.example.com:158.39.48.98"
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: /bin/bash
     volumes:

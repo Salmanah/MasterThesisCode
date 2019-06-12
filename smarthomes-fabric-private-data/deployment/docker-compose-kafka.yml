@@ -13,14 +13,15 @@ services:
             - FABRIC_CA_SERVER_CA_NAME=ca.example.com
             - FABRIC_CA_SERVER_TLS_ENABLED=true
             - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
-            - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/3c50a15957b70bbe98c69b506243346da76d162539a21e13c6c39bbca956dced_sk
+            - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/f46524e032380418a3c68c243693d7cd6bc0be31cb4c20be6071f1384ccea21f_sk
         extra_hosts:
             - "peer0.org1.example.com:158.39.77.58"
             - "peer0.org2.example.com:158.39.77.131"
             - "peer1.org1.example.com:158.39.77.152"
+            - "peer1.org2.example.com:158.39.77.41"
         ports:
             - "7054:7054"
-        command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/3c50a15957b70bbe98c69b506243346da76d162539a21e13c6c39bbca956dced_sk -b admin:adminpw -d'
+        command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/f46524e032380418a3c68c243693d7cd6bc0be31cb4c20be6071f1384ccea21f_sk -b admin:adminpw -d'
         volumes:
             - ../crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
         container_name: ca.example.com
@@ -35,15 +36,16 @@ services:
             - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
             - FABRIC_CA_SERVER_CA_NAME=ca2.example.com
             - FABRIC_CA_SERVER_TLS_ENABLED=true
-            - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
-            - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/3c50a15957b70bbe98c69b506243346da76d162539a21e13c6c39bbca956dced_sk
+            - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org2.example.com-cert.pem
+            - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/499aeec57c0633d4dc49369a8bb2a6e41f5dc0d9626d3bc4a2adbfb26b6bce0b_sk
         extra_hosts:
             - "peer0.org1.example.com:158.39.77.58"
             - "peer0.org2.example.com:158.39.77.131"
             - "peer1.org1.example.com:158.39.77.152"
+            - "peer1.org2.example.com:158.39.77.41"
         ports:
             - "8054:7054"
-        command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/3c50a15957b70bbe98c69b506243346da76d162539a21e13c6c39bbca956dced_sk -b admin:adminpw -d'
+        command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/499aeec57c0633d4dc49369a8bb2a6e41f5dc0d9626d3bc4a2adbfb26b6bce0b_sk -b admin:adminpw -d'
         volumes:
             - ../crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
         container_name: ca2.example.com
@@ -190,6 +192,7 @@ services:
             - "peer0.org1.example.com:158.39.77.58"
             - "peer0.org2.example.com:158.39.77.131"
             - "peer1.org1.example.com:158.39.77.152"
+            - "peer1.org2.example.com:158.39.77.41"
         volumes:
             - ../crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/var/hyperledger/msp
             - ../crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls:/var/hyperledger/tls
@@ -231,6 +234,7 @@ services:
             - "peer0.org1.example.com:158.39.77.58"
             - "peer0.org2.example.com:158.39.77.131"
             - "peer1.org1.example.com:158.39.77.152"
+            - "peer1.org2.example.com:158.39.77.41"
         depends_on:
             - kafka0
             - kafka1
@@ -266,6 +270,7 @@ services:
             - "peer0.org1.example.com:158.39.77.58"
             - "peer0.org2.example.com:158.39.77.131"
             - "peer1.org1.example.com:158.39.77.152"
+            - "peer1.org2.example.com:158.39.77.41"
         depends_on:
             - kafka0
             - kafka1

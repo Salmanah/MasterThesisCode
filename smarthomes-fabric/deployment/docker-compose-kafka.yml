@@ -17,6 +17,7 @@ services:
             - "peer0.org1.example.com:158.39.77.58"
             - "peer0.org2.example.com:158.39.77.131"
             - "peer1.org1.example.com:158.39.77.152"
+            - "peer1.org2.example.com:158.39.48.116"
         ports:
             - "7054:7054"
         command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
@@ -39,6 +40,7 @@ services:
             - "peer0.org1.example.com:158.39.77.58"
             - "peer0.org2.example.com:158.39.77.131"
             - "peer1.org1.example.com:158.39.77.152"
+            - "peer1.org2.example.com:158.39.48.116"
         ports:
             - "8054:7054"
         command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
@@ -188,6 +190,7 @@ services:
             - "peer0.org1.example.com:158.39.77.58"
             - "peer0.org2.example.com:158.39.77.131"
             - "peer1.org1.example.com:158.39.77.152"
+            - "peer1.org2.example.com:158.39.48.116"
         volumes:
             - ../crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/var/hyperledger/msp
             - ../crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls:/var/hyperledger/tls
@@ -229,6 +232,7 @@ services:
             - "peer0.org1.example.com:158.39.77.58"
             - "peer0.org2.example.com:158.39.77.131"
             - "peer1.org1.example.com:158.39.77.152"
+            - "peer1.org2.example.com:158.39.48.116"
         depends_on:
             - kafka0
             - kafka1
@@ -264,6 +268,7 @@ services:
             - "peer0.org1.example.com:158.39.77.58"
             - "peer0.org2.example.com:158.39.77.131"
             - "peer1.org1.example.com:158.39.77.152"
+            - "peer1.org2.example.com:158.39.48.116"
         depends_on:
             - kafka0
             - kafka1
