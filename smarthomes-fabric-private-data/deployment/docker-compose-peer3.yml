@@ -1,0 +1,49 @@
+
+version: '2'
+
+networks:
+    behave:
+
+services:
+    peer1.org2.example.com:
+        extends:
+            file: docker-compose-base.yml
+            service: peer
+        container_name: peer1.org2.example.com
+        environment:
+            - CORE_PEER_CHAINCODELISTENADDRESS=peer1.org2.example.com:7052
+            - CORE_PEER_ID=peer1.org2.example.com
+            - CORE_PEER_ADDRESS=peer1.org2.example.com:7051
+            - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org2.example.com:7051 peer1.org2.example.com:7051
+            - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051 
+            - CORE_PEER_GOSSIP_ORGLEADER=${CORE_PEER_GOSSIP_ORGLEADER_PEER2_ORG1}
+            - CORE_PEER_GOSSIP_USELEADERELECTION=${CORE_PEER_GOSSIP_USELEADERELECTION_PEER2_ORG1}
+            - CORE_PEER_LOCALMSPID=Org2MSP
+            - CORE_PEER_TLS_ENABLED=${CORE_PEER_TLS_ENABLED}
+            - CORE_PEER_TLS_CERT_FILE=${CORE_PEER_TLS_CERT_FILE}
+            - CORE_PEER_TLS_KEY_FILE=${CORE_PEER_TLS_KEY_FILE}
+            - CORE_PEER_TLS_ROOTCERT_FILE=/var/hyperledger/tls/ca.crt
+        volumes:
+            - ../crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/msp:/var/hyperledger/msp
+            - ../crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls:/var/hyperledger/tls
+            - ../crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com:/var/hyperledger/users/Admin@org2.example.com
+            #- ../crypto-config/ordererOrganizations/example.com/orderers:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers
+            #- ../crypto-config/peerOrganizations:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations
+            - ../network-config/:/var/hyperledger/configs
+            
+
+        extra_hosts:
+            - "orderer0.example.com:158.39.48.98"
+            - "orderer1.example.com:158.39.48.98"
+            - "orderer2.example.com:158.39.48.98"
+            - "ca.example.com:158.39.48.98"
+            - "peer0.org1.example.com:158.39.77.58"
+            - "peer0.org2.example.com:158.39.77.131"
+            - "peer1.org2.example.com:158.39.77.41"
+        networks:
+          behave:
+             aliases:
+               - ${CORE_PEER_NETWORKID}
+        ports:
+          - 10051:7051
+          - 10053:7053
