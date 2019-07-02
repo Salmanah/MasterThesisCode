@@ -37,40 +37,15 @@ import (
 // SimpleChaincode example simple Chaincode implementation
 type SimpleChaincode struct {
 }
-//Struct for a Home
-type Home struct {
-	ObjectType    string `json:"Home"` //docType is used to distinguish the various types of objects in state database
-	ID            string `json:"id"`      //the fieldtags are needed to keep case from bouncing around
-	Owner         Owner `json:"owner"`
-	Address		  Address `json:"address"`
-	Devices		  []Device	`json:"devices"`	
-}
 
-type Owner struct{
-	ObjectType    string `json:"Owner"` //docType is used to distinguish the various types of objects in state database
-	ID            string `json:"id"`
-	Firstname	  string `json:"firstname"`
-	Lastname	  string `json:"lastname"`	 
-}
-
-//Struct for a device
-type Device struct{
-	ObjectType    string `json:"Device"` //docType is used to distinguish the various types of objects in state database
-	ID            string `json:"id"`      //the fieldtags are needed to keep case from bouncing around
-}
-
+// DeviceReading struct 
 type DeviceReading struct{
+	objectType		string `json:"docType"` 
 	ID            	string `json:"id"`
-	Temperature 	string `json:"deviceReading"`
-	MinimumTemp	  	string `json:"minimumTemp"`
-	MaximumTemp	  	string `json:"maximumTemp"`
+	Type			string `json:"Type"`
+	Data 			string `json:"data"`
 }
 
-//Struct for an address
-type Address struct{
-	Street		string `json:"street"`
-	City 		string `json:"city"` 
-}
 
 
 // ===================================================================================
@@ -96,9 +71,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	fmt.Println("invoke is running " + function)
 
 	// Handle different functions
-	if function == "initDevice" { //create a new Device
-		return t.initDevice(stub, args)
-	} else if function == "delete" { //delete a marble
+	if function == "delete" { //delete a marble
 		return t.delete(stub, args)
 	} else if function == "readDevice" { //read a Device
 		return t.readDevice(stub, args)
@@ -108,170 +81,53 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return t.sendDeviceReadingEncrypted(stub, args)	
 	 }else if function == " readDeviceEncrypted" {
 		return t. readDeviceEncrypted(stub, args)	
-	 }else if function == "initEnvironment" {
-		return t.initEnvironment(stub)	
-	}
+	 }
 
 	fmt.Println("invoke did not find func: " + function) //error
 	return shim.Error("Received unknown function invocation")
 }
 
-
-// ============================================================
-// initMarble - create a new Device, store into chaincode state
-// ============================================================
-func (t *SimpleChaincode) initDevice(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	var err error
-
-	//   0             1  	      
-	// "DeviceID",  "home.id" 
-	if len(args) != 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
-	}
-
-	// ==== Input sanitation ====
-	fmt.Println("- start init device")
-	if len(args[0]) <= 0 {
-		return shim.Error("1st argument must be a non-empty string")
-	}
-	if len(args[1]) <= 0 {
-		return shim.Error("2nd argument must be a non-empty string")
-	}
-
-	id := args[0]
-	homeID := args[1]
-	
-	// ==== Check if device already exists ====
-	deviceAsBytes, err := stub.GetState(id)
-	if err != nil {
-		return shim.Error("Failed to get device: " + err.Error())
-	} else if deviceAsBytes != nil {
-		fmt.Println("This device already exists: " + id)
-		return shim.Error("This device already exists: " + id)
-	}
-
-	//Check if home exists
-	homeAsBytes, err := stub.GetState(homeID)
-	if err != nil{
-		return shim.Error("Failed to get home error - "+homeID)
-	}
-
-	if homeAsBytes == nil{
-		fmt.Println("Home does not exist - " + homeID)
-		fmt.Println(homeAsBytes)
-		return shim.Error("Home does not exist -" + homeID)
-	}
-	
-	res:= &Home{}
-	json.Unmarshal(homeAsBytes, &res)
-
-	// ==== Create device object ====
-	objectType := "Device"
-	device := Device{
-		ObjectType: objectType,
-		ID: id,
-	}
-
-	//Add device to home
-
-	res.Devices = append(res.Devices, device)
-	homeJSONBytes, err := json.Marshal(res)
-
-	if err != nil{
-		return shim.Error("Marshaling home to add device failed in initDevice")
-	}
-
-	err = stub.PutState(res.ID,homeJSONBytes)
-
-	if err != nil{
-		return shim.Error("Failed to add device to home in initDevice")
-	}
-
-	// ===== Marshal device object ======
-	deviceJSONasBytes, err := json.Marshal(device)
-
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-
-	// === Save Device to state ===
-	err = stub.PutState(id, deviceJSONasBytes)
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-
-
-	// ==== Device saved. Return success ====
-	fmt.Println("- end init device")
-	return shim.Success(deviceJSONasBytes)
-}
-
-
 func (t *SimpleChaincode) sendDeviceReading(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var err error
 	
-	// 0			1
-	//DeviceID	Temperature
-	if len(args[0]) <= 0 {
-		return shim.Error("First argument must be a non-empty string (DeviceID)")
+	// 		1		2	
+	//	   Type   Data 
+	
+	if len(args[0]) <= 0{
+		return shim.Error("Second argument must be a non-empty string (Type)")
 	}
 	if len(args[1]) <= 0{
-		return shim.Error("Second argument must be a non-empty string (Temperature)")
+		return shim.Error("Second argument must be a non-empty string (Data)")
 	}
 	
-	id:= args[0]
+	id,err := cid.New(stub)
+	
+	if err != nil{
+		return shim.Error("Getting clientID failed", err) 
+	}
+
+	type := args[0]
 	temperature := args[1]
 	
-	deviceAsBytes, err := stub.GetState(id)
+	//Create new deviceReading object
+	reading := DeviceReading{
+		objectType := "reading"
+		ID: id,
+		Temperature: temperature,
+	}
+
+	readingJSONBytes, err := json.Marshal(reading)
 	if err != nil{
-		return shim.Error("Failed to get device:")
+		return shim.Error("Marshaling readings failed - "+id)
 	}
-
-	if deviceAsBytes == nil{
-		return shim.Error("SendDeviceReading device does not exist "+id)
-	}
-
-	readingAsBytes, err := stub.GetState(id+"-Reading")
-	if err != nil{
-		return shim.Error("Failed to get deviceReading - "+id)
-	}
-
-	if readingAsBytes == nil{
-		reading := DeviceReading{
-			ID: id+"-Reading",
-			Temperature: temperature,
-		}
-
-		readingJSONBytes, err := json.Marshal(reading)
-		if err != nil{
-			return shim.Error("Marshaling readings failed - "+id)
-		}
-		err = stub.PutState(id+"-Reading",readingJSONBytes)
-
-		if err != nil{
-			shim.Error("Failed to add readings to the blockchain - "+id+"-Reading")
-		}
-
-	}
-
-	res := DeviceReading{}
-	json.Unmarshal(readingAsBytes, &res)
-
-	res.ID = id+"-Reading"
-	res.Temperature = temperature
-
-	readingJSONBytes, err := json.Marshal(res)
+	err = stub.PutState(id,readingJSONBytes)
 
 	if err != nil{
-		shim.Error("Marshaling readings failed step 2 -"+id+"-Reading")
+		shim.Error("Failed to add readings to the blockchain - "+id)
 	}
 
-	err = stub.PutState(res.ID, readingJSONBytes)
-	if err != nil{
-		return shim.Error("Failed to save device")
-	}
-	
-	return shim.Success([]byte("Asset modified, new temperature"))
+	stub.SetEvent(name:"DeviceReading", "payload","DeviceReading successfully sent")
+	return shim.Success([]byte("DeviceReading successfully sent"))
 }
 
 // ===============================================
@@ -308,200 +164,10 @@ func (t *SimpleChaincode) sendDeviceReadingEncrypted(stub shim.ChaincodeStubInte
 // ===============================================
 
 
-func (t *SimpleChaincode) initEnvironment(stub shim.ChaincodeStubInterface) pb.Response {
-	var err error
-	fmt.Println("starting initEnvironment")
-
-	owner1 := &Owner{
-		ObjectType:"home_owner",
-		ID: "OWNER_001",
-		Firstname: "Tony",
-		Lastname: "Stark",	
-	}
-
-	owner2 := &Owner{
-		ObjectType:"home_owner",
-		ID: "OWNER_002",
-		Firstname: "Bruce",
-		Lastname: "Wayne",	
-	}
-
-	address1 := &Address{
-		Street: "Problemveien 21b",
-		City: "Oslo",
-	}
-
-	address2 := &Address{
-		Street: "Problemveien 21a",
-		City: "Oslo",
-	}
-
-	device1 := &Device{
-		ObjectType: "Device",
-		ID: "DEVICE_001",
-	
-	}
-
-	reading1 :=&DeviceReading{
-		ID: "DEVICE_001-Reading",
-		Temperature: "30",
-		MinimumTemp: "15",
-		MaximumTemp: "40",
-	}
-
-
-	device2 := &Device{
-		ObjectType: "Device",
-		ID: "DEVICE_002",
-	}
-
-	reading2 :=&DeviceReading{
-		ID: "DEVICE_002-Reading",
-		Temperature: "40",
-		MinimumTemp: "25",
-		MaximumTemp: "60",
-	}
-
-	home1 := &Home{
-		ObjectType: "Home",
-		ID: "HOME_001",
-		Owner: Owner{
-			ID: owner1.ID,
-			Firstname:owner1.Firstname,
-			Lastname: owner1.Lastname,
-		},
-		Address: Address{
-			Street: address1.Street,
-			City: address1.City,
-		},
-		Devices: []Device{
-			Device{
-				ID: device1.ID,
-			},
-		},
-	}
-
-	home2 := &Home{
-		ObjectType: "Home",
-		ID: "HOME_002",
-		Owner: Owner{
-			ID: owner2.ID,
-			Firstname:owner2.Firstname,
-			Lastname: owner2.Lastname,
-		},
-		Address: Address{
-			Street: address2.Street,
-			City: address2.City,
-		},
-		Devices: []Device{
-			Device{
-				ID: device2.ID,
-			},
-		},
-	}
-
-
-	ownerBytes, err :=json.Marshal(owner1)
-	if err != nil{
-		return shim.Error(err.Error())
-	}
-	err = stub.PutState(owner1.ID, ownerBytes)
-
-	if err != nil {
-		fmt.Println("Could not store owner 1")
-		return shim.Error(err.Error())
-	}
-
-	owner2Bytes, err2 :=json.Marshal(owner2)
-
-	if err != nil{
-		return shim.Error(err2.Error())
-	}
-	err2 = stub.PutState(owner2.ID, owner2Bytes)
-
-	if err2 != nil {
-		fmt.Println("Could not store owner 2")
-		return shim.Error(err2.Error())
-	}
-
-	deviceBytes, err3 :=json.Marshal(device1)
-
-	if err3 != nil{
-		return shim.Error(err3.Error())
-	}
-	err3 = stub.PutState(device1.ID, deviceBytes)
-
-	if err3 != nil {
-		fmt.Println("Could not store device 1")
-		return shim.Error(err3.Error())
-	}
-
-	readingBytes, err4 :=json.Marshal(reading1)
-
-	if err4 != nil{
-		return shim.Error(err4.Error())
-	}
-	err4 = stub.PutState(reading1.ID, readingBytes)
-
-	if err4 != nil {
-		fmt.Println("Could not store reading 1")
-		return shim.Error(err4.Error())
-	}
-
-	device2Bytes, err5 :=json.Marshal(device2)
-
-	if err5 != nil{
-		return shim.Error(err4.Error())
-	}
-	err5 = stub.PutState(device2.ID, device2Bytes)
-
-	if err5 != nil {
-		fmt.Println("Could not store device 2")
-		return shim.Error(err5.Error())
-	}
-
-	reading2Bytes, err6 :=json.Marshal(reading2)
-
-	if err6 != nil{
-		return shim.Error(err6.Error())
-	}
-	err6 = stub.PutState(reading2.ID, reading2Bytes)
-
-	if err6 != nil {
-		fmt.Println("Could not store reading 2")
-		return shim.Error(err6.Error())
-	}
-
-	homeBytes, err7 :=json.Marshal(home1)
-
-	if err7 != nil {
-		return shim.Error(err7.Error())
-	}
-	err7 = stub.PutState(home1.ID, homeBytes)
-
-	if err7 != nil {
-		fmt.Println("Could not store home 1")
-		return shim.Error(err7.Error())
-	}
-
-	home2Bytes, err8 :=json.Marshal(home2)
-
-	if err8 != nil{
-		return shim.Error(err8.Error())
-	}
-	err8 = stub.PutState(home2.ID, home2Bytes)
-
-	if err8 != nil {
-		fmt.Println("Could not store home 2")
-		return shim.Error(err8.Error())
-	}
-	fmt.Printf("Environment created!")
-	return shim.Success(homeBytes)
-}
 
 
 // ===============================================
-// readDeviceEncryoted - Decrypts the data and prints it
+// readDeviceEncrypted - Decrypts the data and prints it
 // ===============================================
 func (t *SimpleChaincode) readDeviceEncrypted(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var id, jsonResp string
@@ -550,38 +216,6 @@ func (t *SimpleChaincode) readTemperature(stub shim.ChaincodeStubInterface, args
 
 	return shim.Success(valAsbytes)
 }
-
-// ===============================================
-// readHomeDevice - read all devices of a home
-// ===============================================
-func (t *SimpleChaincode) readHomeDevice(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	var id, jsonResp string
-	var err error
-
-	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting ID of the Home to query")
-	}
-
-	id = args[0]
-	valAsbytes, err := stub.GetState(id) //get the Home from chaincode state
-	if err != nil {
-		jsonResp = "{\"Error\":\"Failed to get state for " + id + "\"}"
-		return shim.Error(jsonResp)
-	} else if valAsbytes == nil {
-		jsonResp = "{\"Error\":\"Home does not exist: " + id + "\"}"
-		return shim.Error(jsonResp)
-	}
-
-	res := &Home{}
-	json.Unmarshal(valAsbytes,&res)
-
-	fmt.Println("%#v",res.Devices)
-
-	return shim.Success(valAsbytes)
-}
-
-
-
 
 
 // ==================================================

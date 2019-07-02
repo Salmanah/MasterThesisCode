@@ -23,7 +23,15 @@ Organizations:
 
         AnchorPeers:
             - Host: peer0.org2.example.com
-              Port: 8051          
+              Port: 8051
+    
+    - &Org3
+        Name: Org3MSP
+        ID: Org3MSP
+        MSPDir: ../crypto-config/peerOrganizations/org3.example.com/msp
+        AnchorPeers:
+            - Host: peer0.org3.example.com
+              Port: 11051
 
 Capabilities:
     Global: &ChannelCapabilities
@@ -78,6 +86,7 @@ Profiles:
                 Organizations:
                     - *Org1
                     - *Org2
+                    - *Org3
     TwoOrgsChannel:
         Consortium: SampleConsortium
         <<: *ChannelDefaults
@@ -86,29 +95,6 @@ Profiles:
             Organizations:
                 - *Org1
                 - *Org2
+                - *Org3
             Capabilities:
                 <<: *ApplicationCapabilities
-
-    SampleDevModeKafka:
-        <<: *ChannelDefaults
-        Capabilities:
-            <<: *ChannelCapabilities
-        Orderer:
-            <<: *OrdererDefaults
-            OrdererType: kafka
-            Kafka:
-                Brokers:
-                - kafka0:9092
-                - kafka1:9092
-                - kafka2:9092
-                - kafka3:9092
-
-            Organizations:
-            - *OrdererOrg
-            Organizations:
-            - <<: *OrdererOrg
-        Consortiums:
-            SampleConsortium:
-                Organizations:
-                - *Org1
-                - *Org2

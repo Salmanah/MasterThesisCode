@@ -32,14 +32,14 @@ services:
             #- ../crypto-config/peerOrganizations:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations
 
         extra_hosts:
-            - "orderer0.example.com:158.39.48.98"
-            - "orderer1.example.com:158.39.48.98"
-            - "orderer2.example.com:158.39.48.98"
-            - "ca.example.com:158.39.48.98"
-            - "ca2.example.com:158.39.48.98"
-            - "peer0.org1.example.com:158.39.77.58"
-            - "peer1.org1.example.com:158.39.77.152"
-            - "peer1.org2.example.com:158.39.77.41"
+            - "orderer0.example.com:158.39.75.156"
+            - "orderer1.example.com:158.39.75.156"
+            - "orderer2.example.com:158.39.75.156"
+            - "ca.example.com:158.39.75.156"
+            - "ca2.example.com:158.39.75.156"
+            - "peer0.org1.example.com:158.37.63.126"
+            - "peer1.org1.example.com:158.37.63.234"
+            - "peer1.org2.example.com:158.39.75.210"
         networks:
           behave:
              aliases:
