@@ -82,7 +82,7 @@ services:
             - CORE_PEER_TLS_ROOTCERT_FILE=/var/hyperledger/tls/ca.crt
         volumes:
             - /var/run/:/host/var/run/
-            - ../../fabric-rest/:/opt/go/src/github/fabric-rest/
+            - ../../fabric-rest:/opt/go/src/github/fabric-rest
             - ../crypto-config/:/var/hyperledger/configs
             - ../network-config/:/var/hyperledger/configs
         command: peer node start
