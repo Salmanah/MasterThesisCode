@@ -6,7 +6,7 @@ test:
   rounds:
   - label: init
     txNumber:
-    - 100
+    - 10
     rateControl:
     - type: fixed-rate
       opts:

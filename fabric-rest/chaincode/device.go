@@ -40,6 +40,7 @@ type DeviceReading struct{
 	ID            	string `json:"id"`
 	DeviceType		string `json:"Type"`
 	Data 			string `json:"data"`
+	DataSize 		int `json:"dataSize"`
 }
 
 
@@ -109,13 +110,14 @@ func (t *SimpleChaincode) sendDeviceReading(stub shim.ChaincodeStubInterface, ar
 	id:= args[0]
 	data := args[1]
 	deviceType := args[2]
-	
+	dataSize:= len(deviceType)
 	
 	reading := DeviceReading{
 		objectType : "docType",
 		ID: id,
 		Data: data,
 		DeviceType:deviceType,
+		DataSize:dataSize,
 		
 	}
 
