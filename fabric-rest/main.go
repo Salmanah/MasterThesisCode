@@ -6,14 +6,15 @@ import (
     "github.com/gorilla/mux"
     "os/exec"
     "fmt"       
-    "net"                                                                                                                                                                 
+    "net" z                                                                                                                                                            
 )       
 
   
 // DeviceReading struct 
 type User struct{
 	IpAddr          string `json:"ipaddr"`
-	Admin 			bool `json:"Admin"`
+    Admin 			bool `json:"Admin"`
+    Deviceid 			bool `json:"Deviceid"`
 }
 var whitelist = make([]User, 0)
 
@@ -25,7 +26,8 @@ func query(w http.ResponseWriter, r *http.Request){
   
     
     if authorizationAdmin(r) == false{
-        fmt.Println("Admin not detected!")
+        w.Write([]byte("Admin not detected!"))
+        return
     }
     
     cmd := fmt.Sprintf("peer chaincode query -o orderer0.example.com:7050 -n device -c '{\"Args\":[\"readDevice\",\"%s\"]}' -C mychannel", id)                                                                                                                                                            
@@ -43,9 +45,9 @@ func invoke(w http.ResponseWriter, r *http.Request) {
     id := vars["deviceid"]
     deviceType:=vars["type"]
     data:=vars["data"]
-    checkAuth := authorizationIoT(r)
     
-    if checkAuth == false{
+    if authorizationIoT(r) == false{
+        w.Write([]byte("Permission denied!"))
         return
     }
     
@@ -62,9 +64,9 @@ func invoke(w http.ResponseWriter, r *http.Request) {
 func delete(w http.ResponseWriter, r *http.Request) {                                                                                                                       
     vars := mux.Vars(r)
     id := vars["deviceid"]
-    checkAuth := authorizationAdmin(r)
-    
-    if checkAuth == false{
+
+    if authorizationIoT(r) == false{
+        w.Write([]byte("Permission denied!"))
         return
     }
 
@@ -82,9 +84,8 @@ func getHistory(w http.ResponseWriter, r *http.Request) {
     vars := mux.Vars(r)
     id := vars["deviceid"]
     
-    checkAuth := authorizationAdmin(r)
-    
-    if checkAuth == false{
+    if authorizationIoT(r) == false{
+        w.Write([]byte("Permission denied!"))
         return
     }
 
@@ -136,6 +137,12 @@ func registerIoT(w http.ResponseWriter, r *http.Request) {
     incomingIP, _, err := net.SplitHostPort(r.RemoteAddr)
     admin := false
 
+
+    if error != nil{
+        fmt.Println("Encryption failed")
+        return 
+    }
+
     if err != nil{
         fmt.Println("Could not get IP")
     }
@@ -154,6 +161,7 @@ func registerIoT(w http.ResponseWriter, r *http.Request) {
     newAdmin := User{
         IpAddr:vars["ip"],
         Admin:false,
+        deviceId: h.sum(nil)
     }
     whitelist = append(whitelist,newAdmin)
     out := fmt.Sprintf("Added new IoT with ip %s", vars["ip"])                                                                                                                                                               
@@ -212,7 +220,7 @@ func main() {
     //TODO for production
     //r.HandleFunc("/login/{deviceid}", login)
     r.HandleFunc("/registerAdmin/{ip}", registerAdmin)
-    r.HandleFunc("/registerIoT/{ip}", registerIoT)
+    r.HandleFunc("/registerIoT/{ip}/", registerIoT)
     //r.HandleFunc("/list/{deviceid}", list)                                                                                                                                 
                                                                                                                                                                                  
     // Bind to a port and pass our router in                                                                                                                                     

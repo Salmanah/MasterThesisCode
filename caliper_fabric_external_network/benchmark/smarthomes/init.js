@@ -39,7 +39,7 @@ module.exports.run = function() {
             verb: 'initEnvironment'
         };
     } 
-    return bc.invokeSmartContract(contx, 'devicep', '0.1', args, 30);
+    return bc.invokeSmartContract(contx, 'device', '0.1', args, 30);
 };
 
 module.exports.end = function() {
