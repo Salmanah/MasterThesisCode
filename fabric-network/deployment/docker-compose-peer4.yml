@@ -18,9 +18,6 @@ services:
             - CORE_PEER_GOSSIP_ORGLEADER=true
             - CORE_PEER_GOSSIP_USELEADERELECTION=false
             - CORE_PEER_LOCALMSPID=Org3MSP
-            - CORE_PEER_TLS_CLIENTROOTCAS_FILES=/var/hyperledger/users/Admin@org3.example.com/tls/ca.crt
-            - CORE_PEER_TLS_CLIENTCERT_FILE=/var/hyperledger/users/Admin@org3.example.com/tls/client.crt
-            - CORE_PEER_TLS_CLIENTKEY_FILE=/var/hyperledger/users/Admin@org3.example.com/tls/client.key
             ###NEW REMOVE IF IT DOES NOT WORK
             - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
             - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb12:5984

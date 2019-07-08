@@ -40,6 +40,9 @@ services:
             - "peer0.org2.example.com:158.37.63.198"
             - "peer1.org1.example.com:158.37.63.234"
             - "peer1.org2.example.com:158.39.75.210"
+            - "peer0.org3.example.com:158.37.63.35"
+        depends_on:
+            - couchdb01
         networks:
           behave:
              aliases:
@@ -47,3 +50,18 @@ services:
         ports:
           - 7051:7051
           - 7053:7053
+          - 8000:8000
+    
+    couchdb01:
+        extends:
+            file: docker-compose-base.yml
+            service: couchdb
+        container_name: couchdb01
+        # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+        # for example map it to utilize Fauxton User Interface in dev environments.
+        ports:
+          - "5984:5984"
+        networks:
+          behave:
+             aliases:
+               - ${CORE_PEER_NETWORKID}

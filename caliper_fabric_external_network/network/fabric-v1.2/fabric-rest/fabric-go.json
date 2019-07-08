@@ -53,6 +53,21 @@
           "server-hostname": "peer1.org2.example.com",
           "tls_cacerts": "network/fabric-v1.2/fabric-rest/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt"
         }
+      },
+      "org3": {
+        "name": "Org3",
+        "mspid": "Org3MSP",
+        "msp": "network/fabric-v1.2/fabric-rest/crypto-config/peerOrganizations/org3.example.com/msp/",
+        "ca": {
+          "url": "http://158.39.75.156:7054",
+          "name": "ca2.example.com"
+        },
+        "peer0": {
+          "requests": "grpc://158.37.63.35:8051",
+          "events": "grpc://158.37.63.35:8053",
+          "server-hostname": "peer0.org3.example.com",
+          "tls_cacerts": "network/fabric-v1.2/fabric-rest/crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt"
+        }
       }
     },"endorsement-policy": {
       "identities": [
@@ -101,6 +116,6 @@
     "Version": "1.2.0",
     "Size": "2 Orgs with 2 Peer",
     "Orderer": "Kafka",
-    "Distribution": "Multiple hosts, network configuration fabric-rest"
+    "Distribution": "Base case with Kafka and nothing else"
   }
 }

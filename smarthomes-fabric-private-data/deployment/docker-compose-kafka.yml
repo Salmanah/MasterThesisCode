@@ -21,6 +21,7 @@ services:
             - "peer0.org2.example.com:158.37.63.198"
             - "peer1.org1.example.com:158.37.63.234"
             - "peer1.org2.example.com:158.39.75.210"
+            - "peer0.org3.example.com:158.37.63.35"
         ports:
             - "7054:7054"
         command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/312c47ec1f72abb96049a4f90a76641b0c244fd7c4efb2b312137d88b4dec3a7_sk -b admin:adminpw -d'
@@ -47,6 +48,7 @@ services:
             - "peer0.org2.example.com:158.37.63.198"
             - "peer1.org1.example.com:158.37.63.234"
             - "peer1.org2.example.com:158.39.75.210"
+            - "peer0.org3.example.com:158.37.63.35"
         ports:
             - "8054:7054"
         command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org2.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/077c79e3064ec9d4a2b2b90cd5f1e065fb694dd1c211941fbe30e311c7788e81_sk -b admin:adminpw -d'
@@ -197,6 +199,7 @@ services:
             - "peer0.org2.example.com:158.37.63.198"
             - "peer1.org1.example.com:158.37.63.234"
             - "peer1.org2.example.com:158.39.75.210"
+            - "peer0.org3.example.com:158.37.63.35"
         volumes:
             - ../crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/var/hyperledger/msp
             - ../crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls:/var/hyperledger/tls
@@ -239,6 +242,7 @@ services:
             - "peer0.org2.example.com:158.37.63.198"
             - "peer1.org1.example.com:158.37.63.234"
             - "peer1.org2.example.com:158.39.75.210"
+            - "peer0.org3.example.com:158.37.63.35"
         depends_on:
             - kafka0
             - kafka1
@@ -275,6 +279,7 @@ services:
             - "peer0.org2.example.com:158.37.63.198"
             - "peer1.org1.example.com:158.37.63.234"
             - "peer1.org2.example.com:158.39.75.210"
+            - "peer0.org3.example.com:158.37.63.35"
         depends_on:
             - kafka0
             - kafka1
