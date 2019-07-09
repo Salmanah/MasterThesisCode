@@ -11,7 +11,7 @@
 # limitations under the License.
 
 name: Fabric
-version: "1.0"
+version: "1.2"
 mutual-tls: true
 
 caliper:
@@ -23,7 +23,7 @@ caliper:
 info:
   Version: 1.2.0
   Size: 3 Orgs with 2 Peers
-  Orderer: Solo
+  Orderer: kafka
   Distribution: Single Host
   StateDB: CouchDB
 

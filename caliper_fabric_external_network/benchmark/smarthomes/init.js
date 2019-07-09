@@ -38,8 +38,8 @@ module.exports.run = function() {
         args = {
             verb: 'initEnvironment'
         };
-    } 
-    return bc.invokeSmartContract(contx, 'device', '0.1', args, 30);
+    }
+    return bc.invokeSmartContract(contx, 'device', 'v0', args, 30);
 };
 
 module.exports.end = function() {

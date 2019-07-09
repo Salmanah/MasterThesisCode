@@ -63,8 +63,8 @@
           "name": "ca2.example.com"
         },
         "peer0": {
-          "requests": "grpc://158.37.63.35:8051",
-          "events": "grpc://158.37.63.35:8053",
+          "requests": "grpc://158.37.63.35:11051",
+          "events": "grpc://158.37.63.35:11053",
           "server-hostname": "peer0.org3.example.com",
           "tls_cacerts": "network/fabric-v1.2/fabric-rest/crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt"
         }
@@ -85,19 +85,25 @@
         },
         {
           "role": {
+            "name": "member",
+            "mspId": "Org3MSP"
+          }
+        },
+        {
+          "role": {
             "name": "admin",
             "mspId": "Org1MSP"
           }
         }
       ],
-      "policy": { "2-of": [{"signed-by": 0},{"signed-by": 1}]}
+      "policy": { "3-of": [{"signed-by": 0},{"signed-by": 1},{"signed-by": 2}]}
     },
     "channel": [
       {
         "name": "mychannel",
         "deployed": true,
         "config": "network/fabric-v1.2/fabric-rest/network-config/channel.tx",
-        "organizations": ["org1","org2"]
+        "organizations": ["org1","org2","org3"]
       }
     ],
     "chaincodes": [
