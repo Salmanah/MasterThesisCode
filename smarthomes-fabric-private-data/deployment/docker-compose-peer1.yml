@@ -37,6 +37,7 @@ services:
             - "orderer2.example.com:158.39.75.156"
             - "ca.example.com:158.39.75.156"
             - "ca2.example.com:158.39.75.156"
+            - "ca3.example.com:158.39.75.156"
             - "peer0.org1.example.com:158.37.63.126"
             - "peer1.org1.example.com:158.37.63.234"
             - "peer1.org2.example.com:158.39.75.210"
