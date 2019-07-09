@@ -38,8 +38,13 @@ type DeviceReading struct{
 	objectType		string `json:"docType"`
 	ID            	string `json:"id"`
 	DeviceType 		string `json:"deviceType"`
-	Data 			string `json:"data"`
 	DataSize		int		`json:"dataSize"`
+}
+
+type DeviceData struct{
+	objectType		string `json:"docType"`
+	ID            	string `json:"id"`
+	Data 			string `json:"data"`
 }
 
 // ===================================================================================
@@ -73,8 +78,6 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return t.readDevicePrivate(stub, args)
 	}else if function == "sendDeviceReadingPrivate" {
 		return t.sendDeviceReadingPrivate(stub, args)	
-	}else if function == "sendDeviceReading" {
-		return t.sendDeviceReading(stub, args)	
 	}else if function == "getHistoryForDevice" { //get history of values for a Device
 		return t.getHistoryForDevice(stub, args)
 	}
@@ -109,9 +112,13 @@ func (t *SimpleChaincode) sendDeviceReadingPrivate(stub shim.ChaincodeStubInterf
 
 	reading := DeviceReading{
 		ID: id,
-		Data: data,
 		DeviceType: deviceType,
 		DataSize: dataSize,
+	}
+
+	privateReading := DeviceData{
+		ID: id,
+		Data:data,
 	}
 
 	readingJSONBytes, err := json.Marshal(reading)
@@ -120,107 +127,88 @@ func (t *SimpleChaincode) sendDeviceReadingPrivate(stub shim.ChaincodeStubInterf
 		return shim.Error("Marshaling private readings failed - "+id)
 	}
 
-	err = stub.PutPrivateData("CollectionSmarthomesPrivate",id,readingJSONBytes)
+	err = stub.PutPrivateData("collectionSmarthomes",id,readingJSONBytes)
 
 	if err != nil{
-		shim.Error(err.Error())
+		return shim.Error(err.Error())
 	}
-	return shim.Success([]byte("Asset received new temperature stats"))
+
+	readingJSONPrivate, err := json.Marshal(privateReading)
+
+	err = stub.PutPrivateData("collectionSmarthomesPrivate",id,readingJSONPrivate)
+
+	if err != nil{
+		return shim.Error(err.Error())
+	}
+
+	return shim.Success([]byte("New data uploaded"))
 }
-
-func (t *SimpleChaincode) sendDeviceReading(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	var err error
-	
-	// 0			 1	 	 2
-	//DeviceID		Type	Data
-	if len(args[0]) <= 0 {
-		return shim.Error("First argument must be a non-empty string (DeviceID)")
-	}
-	if len(args[1]) <= 0{
-		return shim.Error("Second argument must be a non-empty string (Temperature)")
-	}
-	if len(args[2]) <= 0{
-		return shim.Error("Second argument must be a non-empty string (Temperature)")
-	}
-	
-	id:= args[0]
-	deviceType := args[1]
-	data := args[2]
-	DeviceSize := len(data)
-	
-	
-
-	
-	reading := DeviceReading{
-		ID: id,
-		DeviceType : deviceType,
-		Data : data,
-		DataSize : dataSize 
-
-	}
-
-	readingJSONBytes, err := json.Marshal(reading)
-	if err != nil{
-		return shim.Error("Marshaling readings failed - "+id)
-	}
-	err = stub.PutState(id+"-Reading",readingJSONBytes)
-
-	if err != nil{
-		shim.Error("Failed to add readings to the blockchain - "+id)
-	}
-
-	return shim.Success([]byte("Asset modified, new temperature"))
-}
-
-
 
 // ===============================================
 // readDevice - read a device from chaincode state
 // ===============================================
 func (t *SimpleChaincode) readDevice(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	var id, jsonResp string
-	var err error
+	var id string
+
+	deviceReading := DeviceReading{}
 
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments. Expecting ID of the device to query")
 	}
 
 	id = args[0]
-	valAsbytes, err := stub.GetState(id) //get the Device from chaincode state
+	valAsbytes, err1 := stub.GetPrivateData("collectionSmarthomes",id)  //get the Device from chaincode state
 	
-	if err != nil {
-		jsonResp = "{\"Error\":\"Failed to get state for " + id + "\"}"
-		return shim.Error(jsonResp)
-	} else if valAsbytes == nil {
-		jsonResp = "{\"Error\":\"Device does not exist: " + id + "\"}"
-		return shim.Error(jsonResp)
+	if err1 != nil {
+		return shim.Error(err1.Error())
 	}
 
-	return shim.Success(valAsbytes)
+	err2:= json.Unmarshal(valAsbytes, &deviceReading)
+
+	if err2 != nil{
+		fmt.Println("Error unmarshalling object with id: "+id)
+		return shim.Error(err2.Error())
+	}
+	jsonReading, err3 := json.Marshal(deviceReading)
+
+	if err3 != nil{
+		return shim.Error(err3.Error())
+	}
+
+	return shim.Success(jsonReading)
 }
 
 // ===============================================
 // readDevice - read a device from chaincode state
 // ===============================================
 func (t *SimpleChaincode) readDevicePrivate(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	var id, jsonResp string
-	var err error
+	var id string
+	privateData := DeviceData{}
 
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments. Expecting ID of the device to query")
 	}
 
 	id = args[0]
-	valAsbytes, err := stub.GetPrivateData("collectionSmarthomesPrivate",id) //get the Device from chaincode state
-	if err != nil {
-		jsonResp = "{\"Error\":\"Failed to get state for " + id + "\"}"
-		return shim.Error(jsonResp)
-	} else if valAsbytes == nil {
-		jsonResp = "{\"Error\":\"Device does not exist: " + id + "\"}"
-		return shim.Error(jsonResp)
+	valAsbytes, err1 := stub.GetPrivateData("collectionSmarthomesPrivate",id)  //get the Device from chaincode state
+	
+	if err1 != nil {
+		return shim.Error(err1.Error())
 	}
 
-	return shim.Success(valAsbytes)
+	err2:= json.Unmarshal(valAsbytes, &privateData)
+
+	if err2 != nil{
+		fmt.Println("Error unmarshalling object with id: "+id)
+		return shim.Error(err2.Error())
+	}
+	jsonReading, err3 := json.Marshal(privateData)
+
+	if err3 != nil{
+		return shim.Error(err3.Error())
+	}
+
+	return shim.Success(jsonReading)
 }
 
 // ==================================================
@@ -235,7 +223,7 @@ func (t *SimpleChaincode) delete(stub shim.ChaincodeStubInterface, args []string
 	deviceID := args[0]
 
 	// to maintain the color~name index, we need to read the Device first and get its color
-	valAsbytes, err := stub.GetState(deviceID) //get the device from chaincode state
+	valAsbytes, err := stub.GetPrivateData("collectionSmarthomes",deviceID)  //get the device from chaincode state
 	if err != nil {
 		jsonResp = "{\"Error\":\"Failed to get state for " + deviceID + "\"}"
 		return shim.Error(jsonResp)
