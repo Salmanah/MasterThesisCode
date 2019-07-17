@@ -50,7 +50,7 @@ services:
             - "peer1.org2.example.com:158.39.75.210"
             - "peer0.org3.example.com:158.37.63.35"
         ports:
-            - "8054:7054"
+            - 8054:7054
         command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org2.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/077c79e3064ec9d4a2b2b90cd5f1e065fb694dd1c211941fbe30e311c7788e81_sk -b admin:adminpw -d'
         volumes:
             - ../crypto-config/peerOrganizations/org2.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
@@ -77,7 +77,7 @@ services:
             - "peer1.org2.example.com:158.39.75.210"
             - "peer0.org3.example.com:158.37.63.35"
         ports:
-            - "9054:7054"
+            - 9054:7054
         command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org3.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/42f14c253ab7cc6ca121f271b6bdec9e7e909e36575546338c1af436ced88dee_sk -b admin:adminpw -d'
         volumes:
             - ../crypto-config/peerOrganizations/org3.example.com/ca/:/etc/hyperledger/fabric-ca-server-config

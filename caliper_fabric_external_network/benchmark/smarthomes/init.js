@@ -32,14 +32,14 @@ module.exports.run = function() {
     let args;
     if (bc.bcType === 'fabric-ccp') {
         args = {
-            chaincodeFunction: 'initEnvironment'
+            chaincodeFunction: 'init'
         };
     }else{
         args = {
-            verb: 'initEnvironment'
+            verb: 'init'
         };
     } 
-    return bc.invokeSmartContract(contx, 'device', '0.1', args, 30);
+    return bc.invokeSmartContract(contx, 'device', 'v0', args, 30);
 };
 
 module.exports.end = function() {
