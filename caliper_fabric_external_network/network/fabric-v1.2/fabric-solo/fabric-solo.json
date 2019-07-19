@@ -120,7 +120,7 @@
     },
     "info" : {
       "Version": "1.2.0",
-      "Size": "2 Orgs with 2 Peers",
+      "Size": "3 Orgs with 2 Peers in Org1 and 2, 1 peer in Org3",
       "Orderer": "Solo",
       "Distribution": "Single Host"
     }

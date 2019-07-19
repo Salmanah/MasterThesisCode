@@ -1,0 +1,110 @@
+
+version: '2'
+
+networks:
+    behave:
+
+services:
+
+    ca.example.com:
+        image: hyperledger/fabric-ca:1.2.0
+        environment:
+            - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+            - FABRIC_CA_SERVER_CA_NAME=ca.example.com
+            - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
+            - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/d586da59998fa8fbe22292281dedbfb4ac9d4f2142c1cf89c51b286dc86bf568_sk
+        extra_hosts:
+            - "peer0.org1.example.com:158.37.63.126"
+            - "peer0.org2.example.com:158.37.63.198"
+            - "peer1.org1.example.com:158.37.63.234"
+            - "peer1.org2.example.com:158.39.75.210"
+            - "peer0.org3.example.com:158.37.63.35"
+        ports:
+            - "7054:7054"
+        command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/d586da59998fa8fbe22292281dedbfb4ac9d4f2142c1cf89c51b286dc86bf568_sk -b admin:adminpw -d'
+        volumes:
+            - ../crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+        container_name: ca.example.com
+        networks:
+          behave:
+             aliases:
+               - ${CORE_PEER_NETWORKID}
+    
+    ca2.example.com:
+        image: hyperledger/fabric-ca:1.2.0
+        environment:
+            - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+            - FABRIC_CA_SERVER_CA_NAME=ca2.example.com
+            - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org2.example.com-cert.pem
+            - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/3744bc6b15daa679287a783dcc923654507793978357d66870a0795ba5aeadd2_sk
+        extra_hosts:
+            - "peer0.org1.example.com:158.37.63.126"
+            - "peer0.org2.example.com:158.37.63.198"
+            - "peer1.org1.example.com:158.37.63.234"
+            - "peer1.org2.example.com:158.39.75.210"
+            - "peer0.org3.example.com:158.37.63.35"
+        ports:
+            - 8054:7054
+        command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org2.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/3744bc6b15daa679287a783dcc923654507793978357d66870a0795ba5aeadd2_sk -b admin:adminpw -d'
+        volumes:
+            - ../crypto-config/peerOrganizations/org2.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+        container_name: ca2.example.com
+        networks:
+          behave:
+             aliases:
+               - ${CORE_PEER_NETWORKID}
+    
+    ca3.example.com:
+        image: hyperledger/fabric-ca:1.2.0
+        environment:
+            - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+            - FABRIC_CA_SERVER_CA_NAME=ca3.example.com
+            - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org3.example.com-cert.pem
+            - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/aafb33165284b54c845b2e9d4020b8c91e216b5258bdf2e5ba8a5257fc5a2a6b_sk
+        extra_hosts:
+            - "peer0.org1.example.com:158.37.63.126"
+            - "peer0.org2.example.com:158.37.63.198"
+            - "peer1.org1.example.com:158.37.63.234"
+            - "peer1.org2.example.com:158.39.75.210"
+            - "peer0.org3.example.com:158.37.63.35"
+        ports:
+            - 9054:7054
+        command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org3.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/aafb33165284b54c845b2e9d4020b8c91e216b5258bdf2e5ba8a5257fc5a2a6b_sk -b admin:adminpw -d'
+        volumes:
+            - ../crypto-config/peerOrganizations/org3.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+        container_name: ca3.example.com
+        networks:
+          behave:
+             aliases:
+               - ${CORE_PEER_NETWORKID}
+    
+    orderer0.example.com:
+        extends:
+            file: docker-compose-base.yml
+            service: orderer
+        container_name: orderer0.example.com
+        environment:
+            - ORDERER_HOST=orderer0.example.com
+            - CONFIGTX_ORDERER_ORDERERTYPE=solo
+            - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/msp/orderer/msp
+            - ORDERER_ABSOLUTEMAXBYTES=${ORDERER_ABSOLUTEMAXBYTES}
+            - ORDERER_PREFERREDMAXBYTES=${ORDERER_PREFERREDMAXBYTES}
+        extra_hosts:
+            - "peer0.org1.example.com:158.37.63.126"
+            - "peer0.org2.example.com:158.37.63.198"
+            - "peer1.org1.example.com:158.37.63.234"
+            - "peer1.org2.example.com:158.39.75.210"
+            - "peer0.org3.example.com:158.37.63.35"
+        volumes:
+            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/:/var/hyperledger/msp/orderer
+            - ../crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/:/var/hyperledger/msp/peer0
+            - ../crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/:/var/hyperledger/msp/peer2
+            - ../crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/:/var/hyperledger/msp/peer1
+            - ../crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/:/var/hyperledger/msp/peer3
+            - ../crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/:/var/hyperledger/msp/peer4
+        networks:
+          behave:
+             aliases:
+               - ${CORE_PEER_NETWORKID}
+        ports:
+          - 7050:7050

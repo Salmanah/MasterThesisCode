@@ -13,6 +13,9 @@ services:
             - FABRIC_CA_SERVER_CA_NAME=ca.example.com
             - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
             - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/a946a19c991fa5188c3238b9940034198adb9288f097d366e28d2a6d96a507d1_sk
+            - FABRIC_CA_SERVER_TLS_ENABLED=true
+            - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
+            - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/a946a19c991fa5188c3238b9940034198adb9288f097d366e28d2a6d96a507d1_sk
         extra_hosts:
             - "peer0.org1.example.com:158.37.63.126"
             - "peer0.org2.example.com:158.37.63.198"
@@ -21,7 +24,7 @@ services:
             - "peer0.org3.example.com:158.37.63.35"
         ports:
             - "7054:7054"
-        command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+        command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/a946a19c991fa5188c3238b9940034198adb9288f097d366e28d2a6d96a507d1_sk -b admin:adminpw -d'
         volumes:
             - ../crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
         container_name: ca.example.com
@@ -37,6 +40,9 @@ services:
             - FABRIC_CA_SERVER_CA_NAME=ca2.example.com
             - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org2.example.com-cert.pem
             - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/c9605e61d178cd13e56958b1becccd41aa01d8b4d251b4ab376b6719d224264b_sk
+            - FABRIC_CA_SERVER_TLS_ENABLED=true
+            - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org2.example.com-cert.pem
+            - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/c9605e61d178cd13e56958b1becccd41aa01d8b4d251b4ab376b6719d224264b_sk
         extra_hosts:
             - "peer0.org1.example.com:158.37.63.126"
             - "peer0.org2.example.com:158.37.63.198"
@@ -44,8 +50,8 @@ services:
             - "peer1.org2.example.com:158.39.75.210"
             - "peer0.org3.example.com:158.37.63.35"
         ports:
-            - "8054:7054"
-        command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+            - 8054:7054
+        command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org2.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/c9605e61d178cd13e56958b1becccd41aa01d8b4d251b4ab376b6719d224264b_sk -b admin:adminpw -d'
         volumes:
             - ../crypto-config/peerOrganizations/org2.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
         container_name: ca2.example.com
@@ -61,6 +67,9 @@ services:
             - FABRIC_CA_SERVER_CA_NAME=ca3.example.com
             - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org3.example.com-cert.pem
             - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/9c85f7cd02754d5fed76fe96998601e70b08062b77993cfaea60f7d48397a873_sk
+            - FABRIC_CA_SERVER_TLS_ENABLED=true
+            - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org3.example.com-cert.pem
+            - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/9c85f7cd02754d5fed76fe96998601e70b08062b77993cfaea60f7d48397a873_sk
         extra_hosts:
             - "peer0.org1.example.com:158.37.63.126"
             - "peer0.org2.example.com:158.37.63.198"
@@ -68,16 +77,15 @@ services:
             - "peer1.org2.example.com:158.39.75.210"
             - "peer0.org3.example.com:158.37.63.35"
         ports:
-            - "9054:7054"
-        command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+            - 9054:7054
+        command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org3.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/9c85f7cd02754d5fed76fe96998601e70b08062b77993cfaea60f7d48397a873_sk -b admin:adminpw -d'
         volumes:
-            - ../crypto-config/peerOrganizations/org2.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+            - ../crypto-config/peerOrganizations/org3.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
         container_name: ca3.example.com
         networks:
           behave:
              aliases:
                - ${CORE_PEER_NETWORKID}
-
     zookeeper0:
         extends:
             file: docker-compose-base.yml
@@ -209,9 +217,13 @@ services:
             - ORDERER_KAFKA_RETRY_SHORTINTERVAL=1s
             - ORDERER_KAFKA_RETRY_SHORTTOTAL=30s
             - ORDERER_KAFKA_VERBOSE=true
-            - ORDERER_GENERAL_GENESISPROFILE=SampleInsecureKafka
+            - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/msp/orderer/msp
             - ORDERER_ABSOLUTEMAXBYTES=${ORDERER_ABSOLUTEMAXBYTES}
             - ORDERER_PREFERREDMAXBYTES=${ORDERER_PREFERREDMAXBYTES}
+            - ORDERER_GENERAL_TLS_ENABLED=true
+            - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/msp/orderer/tls/server.key
+            - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/msp/orderer/tls/server.crt
+            - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/msp/orderer/tls/ca.crt, /var/hyperledger/msp/peer0/tls/ca.crt,/var/hyperledger/msp/peer1/tls/ca.crt,/var/hyperledger/msp/peer2/tls/ca.crt, /var/hyperledger/msp/peer3/tls/ca.crt, /var/hyperledger/msp/peer4/tls/ca.crt ]
         extra_hosts:
             - "peer0.org1.example.com:158.37.63.126"
             - "peer0.org2.example.com:158.37.63.198"
@@ -219,9 +231,12 @@ services:
             - "peer1.org2.example.com:158.39.75.210"
             - "peer0.org3.example.com:158.37.63.35"
         volumes:
-            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/var/hyperledger/msp
-            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls:/var/hyperledger/tls
-            - ../network-config/:/var/hyperledger/configs
+            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/:/var/hyperledger/msp/orderer
+            - ../crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/:/var/hyperledger/msp/peer0
+            - ../crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/:/var/hyperledger/msp/peer2
+            - ../crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/:/var/hyperledger/msp/peer1
+            - ../crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/:/var/hyperledger/msp/peer3
+            - ../crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/:/var/hyperledger/msp/peer4
         depends_on:
             - kafka0
             - kafka1
@@ -248,13 +263,20 @@ services:
             - ORDERER_KAFKA_RETRY_LONGINTERVAL=30s
             - ORDERER_KAFKA_RETRY_LONGTOTAL=5m
             - ORDERER_KAFKA_VERBOSE=true
-            - ORDERER_GENERAL_GENESISPROFILE=SampleInsecureKafka
+            - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/msp/orderer/msp
             - ORDERER_ABSOLUTEMAXBYTES=${ORDERER_ABSOLUTEMAXBYTES}
             - ORDERER_PREFERREDMAXBYTES=${ORDERER_PREFERREDMAXBYTES}
+            - ORDERER_GENERAL_TLS_ENABLED=true
+            - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/msp/orderer/tls/server.key
+            - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/msp/orderer/tls/server.crt
+            - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/msp/orderer/tls/ca.crt, /var/hyperledger/msp/peer0/tls/ca.crt,/var/hyperledger/msp/peer1/tls/ca.crt,/var/hyperledger/msp/peer2/tls/ca.crt, /var/hyperledger/msp/peer3/tls/ca.crt, /var/hyperledger/msp/peer4/tls/ca.crt ]
         volumes:
-            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/msp:/var/hyperledger/msp
-            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/tls:/var/hyperledger/tls
-            - ../network-config/:/var/hyperledger/configs
+            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/:/var/hyperledger/msp/orderer
+            - ../crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/:/var/hyperledger/msp/peer0
+            - ../crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/:/var/hyperledger/msp/peer2
+            - ../crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/:/var/hyperledger/msp/peer1
+            - ../crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/:/var/hyperledger/msp/peer3
+            - ../crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/:/var/hyperledger/msp/peer4
         extra_hosts:
             - "peer0.org1.example.com:158.37.63.126"
             - "peer0.org2.example.com:158.37.63.198"
@@ -285,13 +307,20 @@ services:
             - ORDERER_KAFKA_RETRY_SHORTINTERVAL=1s
             - ORDERER_KAFKA_RETRY_SHORTTOTAL=30s
             - ORDERER_KAFKA_VERBOSE=true
-            - ORDERER_GENERAL_GENESISPROFILE=SampleInsecureKafka
+            - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/msp/orderer/msp
             - ORDERER_ABSOLUTEMAXBYTES=${ORDERER_ABSOLUTEMAXBYTES}
             - ORDERER_PREFERREDMAXBYTES=${ORDERER_PREFERREDMAXBYTES}
+            - ORDERER_GENERAL_TLS_ENABLED=true
+            - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/msp/orderer/tls/server.key
+            - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/msp/orderer/tls/server.crt
+            - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/msp/orderer/tls/ca.crt, /var/hyperledger/msp/peer0/tls/ca.crt,/var/hyperledger/msp/peer1/tls/ca.crt,/var/hyperledger/msp/peer2/tls/ca.crt, /var/hyperledger/msp/peer3/tls/ca.crt, /var/hyperledger/msp/peer4/tls/ca.crt ]
         volumes:
-            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/msp:/var/hyperledger/msp
-            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls:/var/hyperledger/tls
-            - ../network-config/:/var/hyperledger/configs
+            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/:/var/hyperledger/msp/orderer
+            - ../crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/:/var/hyperledger/msp/peer0
+            - ../crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/:/var/hyperledger/msp/peer2
+            - ../crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/:/var/hyperledger/msp/peer1
+            - ../crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/:/var/hyperledger/msp/peer3
+            - ../crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/:/var/hyperledger/msp/peer4
         extra_hosts:
             - "peer0.org1.example.com:158.37.63.126"
             - "peer0.org2.example.com:158.37.63.198"

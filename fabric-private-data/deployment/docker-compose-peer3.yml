@@ -1,0 +1,69 @@
+
+version: '2'
+
+networks:
+    behave:
+
+services:
+    peer1.org2.example.com:
+        extends:
+            file: docker-compose-base.yml
+            service: peer
+        container_name: peer1.org2.example.com
+        environment:
+            - CORE_PEER_CHAINCODELISTENADDRESS=peer1.org2.example.com:7052
+            - CORE_PEER_ID=peer1.org2.example.com
+            - CORE_PEER_ADDRESS=peer1.org2.example.com:7051
+            - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org2.example.com:7051 peer1.org2.example.com:7051
+            - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org2.example.com:7051 
+            - CORE_PEER_GOSSIP_ORGLEADER=${CORE_PEER_GOSSIP_ORGLEADER_PEER2_ORG1}
+            - CORE_PEER_GOSSIP_USELEADERELECTION=${CORE_PEER_GOSSIP_USELEADERELECTION_PEER2_ORG1}
+            - CORE_PEER_LOCALMSPID=Org2MSP
+            - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb02:5984
+            - CORE_PEER_TLS_ENABLED=true
+            - CORE_PEER_TLS_CERT_FILE=/var/hyperledger/msp/peer/tls/server.crt
+            - CORE_PEER_TLS_KEY_FILE=/var/hyperledger/msp/peer/tls/server.key
+            - CORE_PEER_TLS_ROOTCERT_FILE=/var/hyperledger/msp/peer/tls/ca.crt
+            - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/msp/peer/msp/
+        volumes:
+            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/:/var/hyperledger/msp/orderer
+            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/:/var/hyperledger/msp/orderer
+            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/:/var/hyperledger/msp/orderer
+            - ../crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/:/var/hyperledger/msp/peer
+            - ../crypto-config/peerOrganizations/org2.example.com/users/:/var/hyperledger/msp/users
+            
+
+        extra_hosts:
+            - "orderer0.example.com:158.39.75.156"
+            - "orderer1.example.com:158.39.75.156"
+            - "orderer2.example.com:158.39.75.156"
+            - "ca.example.com:158.39.75.156"
+            - "ca2.example.com:158.39.75.156"
+            - "ca3.example.com:158.39.75.156"
+            - "peer0.org1.example.com:158.37.63.126"
+            - "peer0.org2.example.com:158.37.63.198"
+            - "peer1.org1.example.com:158.37.63.234"
+            - "peer0.org3.example.com:158.37.63.35"
+        depends_on:
+            - couchdb12
+        networks:
+          behave:
+             aliases:
+               - ${CORE_PEER_NETWORKID}
+        ports:
+          - 10051:7051
+          - 10053:7053
+
+    couchdb12:
+        extends:
+            file: docker-compose-base.yml
+            service: couchdb
+        container_name: couchdb12
+        # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+        # for example map it to utilize Fauxton User Interface in dev environments.
+        ports:
+          - "8984:5984"
+        networks:
+          behave:
+             aliases:
+               - ${CORE_PEER_NETWORKID}

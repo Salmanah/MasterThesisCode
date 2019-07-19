@@ -31,18 +31,18 @@ module.exports.run = function() {
     let args;
     if (bc.bcType === 'fabric-ccp') {
         args = {
-            chaincodeFunction: 'sendDeviceReadingPrivate',
+            chaincodeFunction: 'sendDeviceReading',
             chaincodeArguments: ['DEVICE_001','FRIDGE','35']
         };
     }else{
         args = {
-            verb: 'sendDeviceReadingPrivate',
+            verb: 'sendDeviceReading',
             ID: "DEVICE_001",
             DeviceType: "Fridge",
             Data: 'DATA'
         };
     } 
-    return bc.invokeSmartContract(contx, 'device', 'v0', args, 10);
+    return bc.invokeSmartContract(contx, 'device', 'v0', args, 120);
 };
 
 module.exports.end = function() {

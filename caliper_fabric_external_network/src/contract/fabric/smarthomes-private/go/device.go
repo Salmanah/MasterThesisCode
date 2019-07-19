@@ -80,34 +80,30 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return t.sendDeviceReadingPrivate(stub, args)	
 	}else if function == "getHistoryForDevice" { //get history of values for a Device
 		return t.getHistoryForDevice(stub, args)
+	}else if function == "initDevice" { //read a Device
+		return t.initDevice(stub, args)
 	}
 
 	fmt.Println("invoke did not find func: " + function) //error
 	return shim.Error("Received unknown function invocation")
 }
 
-
-
-
-func (t *SimpleChaincode) sendDeviceReadingPrivate(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (t *SimpleChaincode) initDevice(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var err error
 
-	// 0			1		 2
-	//DeviceID	   Type		Data
+	// 0			1		
+	//DeviceID	   Type		
 	if len(args[0]) <= 0 {
 		return shim.Error("First argument must be a non-empty string (DeviceID)")
 	}
 	if len(args[1]) <= 0{
-		return shim.Error("Second argument must be a non-empty string (Temperature)")
+		return shim.Error("Second argument must be a non-empty string (Type)")
 	}
 
-	if len(args[2]) <= 0{
-		return shim.Error("Second argument must be a non-empty string (Temperature)")
-	}
 
 	id := args[0]
 	deviceType := args[1]
-	data := args[2]
+	data := ""
 	dataSize := len(data)
 
 	reading := DeviceReading{
@@ -141,7 +137,85 @@ func (t *SimpleChaincode) sendDeviceReadingPrivate(stub shim.ChaincodeStubInterf
 		return shim.Error(err.Error())
 	}
 
-	return shim.Success([]byte("New data uploaded"))
+	return shim.Success([]byte("Device intitiated"))
+}
+
+func (t *SimpleChaincode) sendDeviceReadingPrivate(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	var err error
+
+	// 0			1		 2
+	//DeviceID	   Type   Data	
+	if len(args[0]) <= 0 {
+		return shim.Error("First argument must be a non-empty string (DeviceID)")
+	}
+	if len(args[1]) <= 0{
+		return shim.Error("Second argument must be a non-empty string (Data)")
+	}
+
+	if len(args[2]) <= 0{
+		return shim.Error("Second argument must be a non-empty string (Data)")
+	}
+
+
+	id := args[0]
+	deviceType := args[1]
+	data := args[2]
+	dataSize := len(data)
+	fmt.Println("- Start sendingReadings -", id)
+
+	deviceAsBytes, err := stub.GetPrivateData("collectionSmarthomes",id)
+	deviceAsBytesPrivate, err1 := stub.GetPrivateData("collectionSmarthomesPrivate",id)
+
+	if err != nil {
+		return shim.Error("Failed to get device: "+err.Error())
+	}else if deviceAsBytes == nil {
+		return shim.Error("Device does not exist")
+	}
+
+	if err1 != nil {
+		return shim.Error("Failed to get device: "+err.Error())
+	}else if deviceAsBytesPrivate == nil {
+		return shim.Error("Private Device does not exist")
+	}
+
+	newReading := DeviceReading{}
+	newPrivateReading := DeviceData{}
+
+	err = json.Unmarshal(deviceAsBytes, &newReading)
+	if err != nil{
+		return shim.Error(err.Error())
+	}
+	err = json.Unmarshal(deviceAsBytesPrivate, &newPrivateReading)
+	if err != nil{
+		return shim.Error(err.Error())
+	}
+
+	newPrivateReading.Data = data
+	newReading.DataSize = dataSize
+	newReading.DeviceType = deviceType
+
+
+	readingJSONBytes, err := json.Marshal(newReading)
+
+	if err != nil{
+		return shim.Error("Marshaling private readings failed - "+id)
+	}
+
+	err = stub.PutPrivateData("collectionSmarthomes",id,readingJSONBytes)
+
+	if err != nil{
+		return shim.Error(err.Error())
+	}
+
+	readingJSONPrivate, err := json.Marshal(newPrivateReading)
+
+	err = stub.PutPrivateData("collectionSmarthomesPrivate",id,readingJSONPrivate)
+
+	if err != nil{
+		return shim.Error(err.Error())
+	}
+
+	return shim.Success([]byte("Data successfully updated"))
 }
 
 // ===============================================

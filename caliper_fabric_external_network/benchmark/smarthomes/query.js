@@ -32,7 +32,7 @@ module.exports.run = function() {
     if (bc.bcType === 'fabric-ccp') {
         args = {
             chaincodeFunction: 'readDevice',
-            chaincodeArguments: ['BLACK']
+            chaincodeArguments: ['DEVICE_001']
         };
     } else {
         args = {
