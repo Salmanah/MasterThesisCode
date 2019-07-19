@@ -30,8 +30,6 @@ services:
 
         extra_hosts:
             - "orderer0.example.com:158.39.75.156"
-            - "orderer1.example.com:158.39.75.156"
-            - "orderer2.example.com:158.39.75.156"
             - "ca.example.com:158.39.75.156"
             - "ca3.example.com:158.39.75.156"
             - "ca2.example.com:158.39.75.156"

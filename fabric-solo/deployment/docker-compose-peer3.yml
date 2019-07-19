@@ -23,16 +23,12 @@ services:
             - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/msp/peer/msp/
         volumes:
             - ../crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/:/var/hyperledger/msp/orderer
-            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/:/var/hyperledger/msp/orderer
-            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/:/var/hyperledger/msp/orderer
             - ../crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/:/var/hyperledger/msp/peer
             - ../crypto-config/peerOrganizations/org2.example.com/users/:/var/hyperledger/msp/users
             
 
         extra_hosts:
             - "orderer0.example.com:158.39.75.156"
-            - "orderer1.example.com:158.39.75.156"
-            - "orderer2.example.com:158.39.75.156"
             - "ca.example.com:158.39.75.156"
             - "ca2.example.com:158.39.75.156"
             - "ca3.example.com:158.39.75.156"
