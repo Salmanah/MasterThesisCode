@@ -34,9 +34,9 @@ import (
 type SimpleChaincode struct {
 }
 
-// DeviceReading struct 
+// DeviceReading struct
 type DeviceReading struct{
-	objectType		string `json:"docType"` 
+	objectType		string `json:"docType"`
 	ID            	string `json:"id"`
 	DeviceType		string `json:"Type"`
 	Data 			string `json:"data"`
@@ -71,16 +71,16 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return t.readDevice(stub, args)
 	}
 	if function == "sendDeviceReading" {
-		return t.sendDeviceReading(stub, args)	
+		return t.sendDeviceReading(stub, args)
 	}
 	if function == "delete" {
-		return t.delete(stub, args)	
+		return t.delete(stub, args)
 	}
 	if function == "getHistoryForDevice" {
-		return t.getHistoryForDevice(stub, args)	
+		return t.getHistoryForDevice(stub, args)
 	}
 
-	
+
 
 
 	fmt.Println("invoke did not find func: " + function) //error
@@ -93,9 +93,9 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 
 func (t *SimpleChaincode) sendDeviceReading(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var err error
-	
+
 	// 0			1		 2
-	//DeviceID	   data		type
+	//DeviceID	   type		Data
 	if len(args[0]) <= 0 {
 		return shim.Error("First argument must be a non-empty string (DeviceID)")
 	}
@@ -106,13 +106,13 @@ func (t *SimpleChaincode) sendDeviceReading(stub shim.ChaincodeStubInterface, ar
 	if len(args[2]) <= 0{
 		return shim.Error("Third argument must be a non-empty string (Data)")
 	}
-	
+
 	id:= args[0]
-	data := args[1]
-	deviceType := args[2]
+	deviceType := args[1]
+	data := args[2]
 	dataSize := len(data)
-	
-	
+
+
 	reading := DeviceReading{
 		objectType : "docType",
 		ID: id,
@@ -131,12 +131,12 @@ func (t *SimpleChaincode) sendDeviceReading(stub shim.ChaincodeStubInterface, ar
 	if err != nil{
 		shim.Error("Failed to add readings to the blockchain - "+id)
 	}
-	
+
 	return shim.Success([]byte("Asset modified, new temperature"))
 }
 
 // ===============================================
-// initEnvironment - creates 2 Homes, 2 devices and 2 Owners 
+// initEnvironment - creates 2 Homes, 2 devices and 2 Owners
 // ===============================================
 
 
@@ -153,7 +153,7 @@ func (t *SimpleChaincode) readDevice(stub shim.ChaincodeStubInterface, args []st
 
 	id = args[0]
 	valAsbytes, err := stub.GetState(id) //get the Device from chaincode state
-	
+
 	if err != nil {
 		jsonResp = "{\"Error\":\"Failed to get state for " + id + "\"}"
 		return shim.Error(jsonResp)
@@ -171,7 +171,7 @@ func (t *SimpleChaincode) readDevice(stub shim.ChaincodeStubInterface, args []st
 func (t *SimpleChaincode) delete(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var jsonResp string
 	var deviceJSON DeviceReading
-	
+
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments. Expecting 1")
 	}
@@ -279,5 +279,3 @@ func (t *SimpleChaincode) getHistoryForDevice(stub shim.ChaincodeStubInterface, 
 
 	return shim.Success(buffer.Bytes())
 }
-
-

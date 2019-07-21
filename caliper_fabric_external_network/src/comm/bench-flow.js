@@ -375,7 +375,7 @@ module.exports.run = async function(configFile, networkFile) {
         await monitor.stop();
 
         let date = new Date().toISOString().replace(/-/g,'').replace(/:/g,'').substr(0,15);
-        let output = path.join(process.cwd(), `report-${date}.html`);
+        let output = path.join(process.cwd(), `reports/fabric-base/report-fabric-base-51kb-1000tps.html`);
         await report.generate(output);
         logger.info(`Generated report at ${output}`);
 
