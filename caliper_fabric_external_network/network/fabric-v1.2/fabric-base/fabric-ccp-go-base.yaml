@@ -33,7 +33,7 @@ clients:
         cryptoStore:
           path: /tmp/hfc-cvs/org1
       clientPrivateKey:
-        path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/6eec0699bcb3809ea9ef3b50676e81486954f082da1b99672693aff372327af0_sk
+        path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/7c2c7bdb20c5ea59fde184ac6fb405ad39f39a726e6aab2e425f470f3a1871f7_sk
       clientSignedCert:
         path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem
 
@@ -45,7 +45,7 @@ clients:
         cryptoStore:
           path: /tmp/hfc-cvs/org2
       clientPrivateKey:
-        path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/keystore/d3e0f9cc0ab3bfa6e07cd930c9cc43c4f76b7828566d3171c3635446727546cc_sk
+        path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/keystore/f3825b007b707860dee282fa78d242e0182a4baa20e2d4ded2f4a7d91cac0549_sk
       clientSignedCert:
         path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/signcerts/User1@org2.example.com-cert.pem
 
@@ -57,7 +57,7 @@ clients:
         cryptoStore:
           path: /tmp/hfc-cvs/org3
       clientPrivateKey:
-        path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org3.example.com/users/User1@org3.example.com/msp/keystore/d560753bd698b786f1c334f378da9be308e680dd59a03d035a4109d857f37d67_sk
+        path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org3.example.com/users/User1@org3.example.com/msp/keystore/2bbe1c0f737dac09f4d9b2bd8f1af46c72c962144b6a944cfd2cc1c29e09648b_sk
       clientSignedCert:
         path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org3.example.com/users/User1@org3.example.com/msp/signcerts/User1@org3.example.com-cert.pem
 
@@ -134,7 +134,7 @@ organizations:
     certificateAuthorities:
     - ca.example.com
     adminPrivateKey:
-      path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/71920a0e5c7a92e02448148190807bfd5dd9ffea9c811dd64f3ab06874b67b7d_sk
+      path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/c4b077798d58fdc598ef43d6a1887c0dc7ea32fe2b93ab6617e8adceecae6b2e_sk
     signedCert:
       path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem
 
@@ -146,7 +146,7 @@ organizations:
     certificateAuthorities:
     - ca2.example.com
     adminPrivateKey:
-      path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/3e880979a06e179e6cddfc57684e5343188a875d1d3f104a0ac00782d14557e9_sk
+      path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/d6d67aa1b8e3edb2c62639972aeca9d02da37cef052568e6a867e85a031871d8_sk
     signedCert:
       path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/Admin@org2.example.com-cert.pem
 
@@ -157,7 +157,7 @@ organizations:
     certificateAuthorities:
     - ca3.example.com
     adminPrivateKey:
-      path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/keystore/207519d9960c76830db6fb4eeb2f0b576d52a6b7e7fe768f714ba7b6fc866f9e_sk
+      path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/keystore/da6033676d7f8da89e33a5aedd43ca3a62f5aec9bf23fff3a09d85df3726285b_sk
     signedCert:
       path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/signcerts/Admin@org3.example.com-cert.pem
 
