@@ -80,9 +80,9 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return t.sendDeviceReadingPrivate(stub, args)	
 	}else if function == "getHistoryForDevice" { //get history of values for a Device
 		return t.getHistoryForDevice(stub, args)
-	}else if function == "initDevice" { //read a Device
+	}/*else if function == "initDevice" { //read a Device
 		return t.initDevice(stub, args)
-	}
+	}*/
 
 	fmt.Println("invoke did not find func: " + function) //error
 	return shim.Error("Received unknown function invocation")
@@ -139,7 +139,7 @@ func (t *SimpleChaincode) initDevice(stub shim.ChaincodeStubInterface, args []st
 
 	return shim.Success([]byte("Device intitiated"))
 }
-
+/*
 func (t *SimpleChaincode) sendDeviceReadingPrivate(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var err error
 
@@ -216,6 +216,61 @@ func (t *SimpleChaincode) sendDeviceReadingPrivate(stub shim.ChaincodeStubInterf
 	}
 
 	return shim.Success([]byte("Data successfully updated"))
+}*/
+
+func (t *SimpleChaincode) sendDeviceReadingPrivate(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	var err error
+	
+	// 0			1		 2
+	//DeviceID	   data		type
+	if len(args[0]) <= 0 {
+		return shim.Error("First argument must be a non-empty string (DeviceID)")
+	}
+	if len(args[1]) <= 0{
+		return shim.Error("Second argument must be a non-empty string (Type)")
+	}
+
+	if len(args[2]) <= 0{
+		return shim.Error("Third argument must be a non-empty string (Data)")
+	}
+	
+	id:= args[0]
+	deviceType := args[1]
+	data := args[2]
+	dataSize:= len(deviceType)
+	
+	reading := DeviceReading{
+		objectType : "docType",
+		ID: id,
+		DeviceType:deviceType,
+		DataSize:dataSize,
+		
+	}
+
+	privateData := DeviceData{
+		ID: id,
+		Data: data,
+	}
+
+	readingJSONBytes, err := json.Marshal(reading)
+	if err != nil{
+		return shim.Error("Marshaling readings failed - "+id)
+	}
+
+	readingJSONBytesPrivate, err := json.Marshal(privateData)
+	if err != nil{
+		return shim.Error("Marshaling readings failed - "+id)
+	}
+
+	err = stub.PutPrivateData("collectionSmarthomes",id,readingJSONBytes)
+
+	if err != nil{
+		shim.Error("Failed to add readings to the blockchain - "+id)
+	}
+
+	err = stub.PutPrivateData("collectionSmarthomesPrivate",id,readingJSONBytesPrivate)
+	
+	return shim.Success([]byte("Asset modified!"))
 }
 
 // ===============================================
