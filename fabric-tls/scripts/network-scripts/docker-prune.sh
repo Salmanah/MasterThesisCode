@@ -7,7 +7,7 @@ echo "Killing all docker containers and images"
 	tmux send -t CA.2  "docker system prune -a" ENTER ##Peer0
 	tmux send -t CA.3  "docker system prune -a" ENTER ##Peer2
 	tmux send -t CA.4  "docker system prune -a" ENTER #Peer1
-	tmux send -t CA.5  "docker system prune -a" ENTER #Peer3
+	tmux send -t CA.5  "docker system prune -a" ENTER #Peer32
 
 	
 
