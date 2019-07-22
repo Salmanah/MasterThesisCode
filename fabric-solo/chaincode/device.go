@@ -40,7 +40,7 @@ type DeviceReading struct{
 	ID            	string `json:"id"`
 	DeviceType		string `json:"Type"`
 	Data 			string `json:"data"`
-	DataSize		int `json:"dataSize"`
+	DataSize 		int `json:"dataSize"`
 }
 
 
@@ -108,10 +108,9 @@ func (t *SimpleChaincode) sendDeviceReading(stub shim.ChaincodeStubInterface, ar
 	}
 	
 	id:= args[0]
-	data := args[1]
-	deviceType := args[2]
-	dataSize := len(data)
-	
+	deviceType := args[1]
+	data := args[2]
+	dataSize:= len(deviceType)
 	
 	reading := DeviceReading{
 		objectType : "docType",
@@ -119,7 +118,7 @@ func (t *SimpleChaincode) sendDeviceReading(stub shim.ChaincodeStubInterface, ar
 		Data: data,
 		DeviceType:deviceType,
 		DataSize:dataSize,
-
+		
 	}
 
 	readingJSONBytes, err := json.Marshal(reading)
@@ -199,7 +198,7 @@ func (t *SimpleChaincode) delete(stub shim.ChaincodeStubInterface, args []string
 	}
 
 	// maintain the index
-	indexName := "id~device"
+	indexName := "id~Device"
 	colorNameIndexKey, err := stub.CreateCompositeKey(indexName, []string{deviceJSON.ID})
 	if err != nil {
 		return shim.Error(err.Error())
