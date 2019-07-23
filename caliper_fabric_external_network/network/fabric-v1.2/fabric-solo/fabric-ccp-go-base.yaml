@@ -1,0 +1,240 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Fabric
+version: "1.0"
+mutual-tls: false
+
+caliper:
+  blockchain: fabric-ccp
+
+info:
+  Version: 1.2.0
+  Size: 3 Orgs with 2 Peers
+  Orderer: Solo
+  Distribution: Remote solo case
+  StateDB: CouchDB
+
+clients:
+  client0.org1.example.com:
+    client:
+      organization: Org1
+      credentialStore:
+        path: /tmp/hfc-kvs/org1
+        cryptoStore:
+          path: /tmp/hfc-cvs/org1
+      clientPrivateKey:
+        path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/c68604e97a0b410c25fd24c63f39603471e438cafdd10eda21085a010c19beb6_sk
+      clientSignedCert:
+        path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem
+
+  client0.org2.example.com:
+    client:
+      organization: Org2
+      credentialStore:
+        path: /tmp/hfc-kvs/org2
+        cryptoStore:
+          path: /tmp/hfc-cvs/org2
+      clientPrivateKey:
+        path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/keystore/2ff7019bdf9d09bcbb3e1e33d26dad5bc8cc3ea7360f68f9e027c0b6c7a88931_sk
+      clientSignedCert:
+        path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/signcerts/User1@org2.example.com-cert.pem
+
+  client0.org3.example.com:
+    client:
+      organization: Org3
+      credentialStore:
+        path: /tmp/hfc-kvs/org3
+        cryptoStore:
+          path: /tmp/hfc-cvs/org3
+      clientPrivateKey:
+        path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org3.example.com/users/User1@org3.example.com/msp/keystore/042bdde81061a7bc45c1e6f5e65b673aa1ae43aef3f078f758d3b04c190bc1e1_sk
+      clientSignedCert:
+        path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org3.example.com/users/User1@org3.example.com/msp/signcerts/User1@org3.example.com-cert.pem
+
+channels:
+  mychannel:
+    configBinary: network/fabric-v1.2/fabric-solo/network-config/channel.tx
+    created: true
+    orderers:
+    - orderer0.example.com
+    peers:
+      peer0.org1.example.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      peer0.org2.example.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      peer1.org1.example.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      peer1.org2.example.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      peer0.org3.example.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+    chaincodes:
+    - id: device
+      version: v0
+      language: golang
+      targetPeers:
+      - peer0.org1.example.com
+      - peer1.org1.example.com
+      - peer0.org2.example.com
+      - peer1.org2.example.com
+      - peer0.org3.example.com
+      path: contract/fabric/smarthomes/go
+
+      endorsement-policy:
+        identities:
+        - role:
+            name: member
+            mspId: Org1MSP
+        - role:
+            name: member
+            mspId: Org2MSP
+        - role:
+            name: member
+            mspId: Org3MSP
+        policy:
+        3-of:
+        - signed-by: 0
+        - signed-by: 1
+        - signed-by: 2
+
+organizations:
+  Org1:
+    mspid: Org1MSP
+    peers:
+    - peer0.org1.example.com
+    - peer1.org1.example.com
+    certificateAuthorities:
+    - ca.example.com
+    adminPrivateKey:
+      path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/95c0261303dfd29bb91dcf802312f0ec0184414eb4e2f89f82330c8b28892fa7_sk
+    signedCert:
+      path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem
+
+  Org2:
+    mspid: Org2MSP
+    peers:
+    - peer0.org2.example.com
+    - peer1.org2.example.com
+    certificateAuthorities:
+    - ca2.example.com
+    adminPrivateKey:
+      path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/7c0b02367715c60b42628ec886655bfb235c344a97fe2acc308e3ac4ab37852e_sk
+    signedCert:
+      path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/Admin@org2.example.com-cert.pem
+
+  Org3:
+    mspid: Org3MSP
+    peers:
+    - peer0.org3.example.com
+    certificateAuthorities:
+    - ca3.example.com
+    adminPrivateKey:
+      path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/keystore/9bae4f114563a1b3d38a592282d85beae2b64ff296b7cb081eeca57f6c6a8e2a_sk
+    signedCert:
+      path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/signcerts/Admin@org3.example.com-cert.pem
+
+orderers:
+  orderer0.example.com:
+    url: grpc://158.39.75.156:7050
+    grpcOptions:
+      ssl-target-name-override: orderer0.example.com
+    tlsCACerts:
+      path: network/fabric-v1.2/fabric-solo/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+peers:
+  peer0.org1.example.com:
+    url: grpc://158.37.63.126:7051
+    grpcOptions:
+      ssl-target-name-override: peer0.org1.example.com
+      grpc.keepalive_time_ms: 600000
+    tlsCACerts:
+      path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem
+
+  peer1.org1.example.com:
+    url: grpc://158.37.63.234:9051
+    grpcOptions:
+      ssl-target-name-override: peer1.org1.example.com
+      grpc.keepalive_time_ms: 600000
+    tlsCACerts:
+      path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem
+
+  peer0.org2.example.com:
+    url: grpc://158.37.63.198:8051
+    grpcOptions:
+      ssl-target-name-override: peer0.org2.example.com
+      grpc.keepalive_time_ms: 600000
+    tlsCACerts:
+      path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/msp/tlscacerts/tlsca.org2.example.com-cert.pem
+
+  peer1.org2.example.com:
+    url: grpc://158.39.75.210:10051
+    grpcOptions:
+      ssl-target-name-override: peer1.org2.example.com
+      grpc.keepalive_time_ms: 600000
+    tlsCACerts:
+      path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/msp/tlscacerts/tlsca.org2.example.com-cert.pem
+
+  peer0.org3.example.com:
+    url: grpc://158.37.63.35:11051
+    grpcOptions:
+      ssl-target-name-override: peer0.org3.example.com
+      grpc.keepalive_time_ms: 600000
+    tlsCACerts:
+      path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/msp/tlscacerts/tlsca.org3.example.com-cert.pem
+
+
+certificateAuthorities:
+  ca.example.com:
+    url: http://158.39.75.156:7054
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org1.example.com/tlsca/tlsca.org1.example.com-cert.pem
+    registrar:
+    - enrollId: admin
+      enrollSecret: adminpw
+
+  ca2.example.com:
+    url: http://158.39.75.156:8054
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org2.example.com/tlsca/tlsca.org2.example.com-cert.pem
+    registrar:
+    - enrollId: admin
+      enrollSecret: adminpw
+
+  ca3.example.com:
+    url: http://158.39.75.156:9054
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      path: network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org3.example.com/tlsca/tlsca.org3.example.com-cert.pem
+    registrar:
+    - enrollId: admin
+      enrollSecret: adminpw

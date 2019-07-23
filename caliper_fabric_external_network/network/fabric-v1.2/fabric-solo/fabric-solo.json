@@ -1,0 +1,127 @@
+{
+    "caliper": {
+      "blockchain": "fabric"
+    },
+    "fabric": {
+      "cryptodir": "network/fabric-v1.2/fabric-solo/crypto-config",
+      "network": {
+        "orderer": {
+          "url": "grpc://158.39.75.156:7050",
+          "mspid": "OrdererMSP",
+          "msp": "network/fabric-v1.2/fabric-solo/crypto-config/ordererOrganizations/example.com/msp/",
+          "server-hostname": "orderer0.example.com",
+          "tls_cacerts": "network/fabric-v1.2/fabric-solo/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/ca.crt"
+        },
+        "org1": {
+          "name": "peerOrg1",
+          "mspid": "Org1MSP",
+          "msp": "network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org1.example.com/msp/",
+          "ca": {
+            "url": "http://158.39.75.156:7054",
+            "name": "ca.example.com"
+          },
+          "peer0": {
+            "requests": "grpc://158.37.63.126:7051",
+            "events": "grpc://158.37.63.126:7053",
+            "server-hostname": "peer0.org1.example.com",
+            "tls_cacerts": "network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
+          },
+          "peer1": {
+            "requests": "grpc://158.37.63.234:9051",
+            "events": "grpc://158.37.63.234:9053",
+            "server-hostname": "peer1.org1.example.com",
+            "tls_cacerts": "network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt"
+          }
+        },
+        "org2": {
+          "name": "peerOrg2",
+          "mspid": "Org2MSP",
+          "msp": "network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org2.example.com/msp/",
+          "ca": {
+            "url": "http://158.39.75.156:8054",
+            "name": "ca2.example.com"
+          },
+          "peer0": {
+            "requests": "grpc://158.37.63.198:8051",
+            "events": "grpc://158.37.63.198:8053",
+            "server-hostname": "peer0.org2.example.com",
+            "tls_cacerts": "network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt"
+          },
+          "peer1": {
+            "requests": "grpc://158.39.75.210:10051",
+            "events": "grpc://158.39.75.210:10053",
+            "server-hostname": "peer1.org2.example.com",
+            "tls_cacerts": "network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt"
+          }
+        },
+        "org3": {
+          "name": "peerOrg3",
+          "mspid": "Org3MSP",
+          "msp": "network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org3.example.com/msp/",
+          "ca": {
+            "url": "http://158.39.75.156:8054",
+            "name": "ca3.example.com"
+          },
+          "peer0": {
+            "requests": "grpc://158.37.63.35:11051",
+            "events": "grpc://158.37.63.35:11053",
+            "server-hostname": "peer0.org3.example.com",
+            "tls_cacerts": "network/fabric-v1.2/fabric-solo/crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt"
+          }
+        }
+    },
+      "channel": [
+        {
+          "name": "mychannel",
+          "deployed": true,
+          "config": "network/fabric-v1.2/fabric-solo/network-config/channel.tx",
+          "organizations": ["org1", "org2", "org3"]
+        }
+      ],
+      "chaincodes": [
+        {"id": "device", "path": "contract/fabric/smarthomes/go", "language":"golang", "version": "v0", "channel": "mychannel"}
+      ],
+      "endorsement-policy": {
+        "identities": [
+          {
+            "role": {
+              "name": "member",
+              "mspId": "Org1MSP"
+            }
+          },
+          {
+            "role": {
+              "name": "member",
+              "mspId": "Org2MSP"
+            }
+          },
+          {
+            "role": {
+              "name": "member",
+              "mspId": "Org3MSP"
+            }
+          },
+          {
+            "role": {
+              "name": "admin",
+              "mspId": "Org1MSP"
+            }
+          }
+        ],
+        "policy": { "3-of": [{"signed-by": 0}, {"signed-by": 1}, {"signed-by": 2}]}
+      },
+      "context": {
+        "smallOperations": "mychannel",
+        "init": "mychannel",
+        "open": "mychannel",
+        "publish": "mychannel",
+        "query": "mychannel"
+      }
+    },
+    "info" : {
+      "Version": "1.2.0",
+      "Size": "3 Orgs with 2 Peers in Org1 and 2, 1 peer in Org3",
+      "Orderer": "Solo",
+      "Distribution": "remote Host"
+    }
+  }
