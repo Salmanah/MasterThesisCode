@@ -37,7 +37,7 @@ module.exports.run = function() {
     }else{
         args = {
             verb: 'initDevice',
-            ID: "D",
+            ID: "DEVICE_001",
             DeviceType: "FRIDGE",
         };
     }

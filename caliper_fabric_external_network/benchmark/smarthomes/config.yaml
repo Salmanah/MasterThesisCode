@@ -1,37 +1,59 @@
 ---
 test:
+  name: fabric-base-240
   clients:
     type: local
-    number: 5
+    number: 20
   rounds:
   - label: init
     txNumber:
+    - 500
+    - 500
+    - 500
+    - 1000
+    - 1000
+    - 1000
+    - 1500
+    - 1500
     - 1500
     rateControl:
-    - type: fixed-rate
+    - type: fixed-feedback-rate
       opts:
         tps: 25
-    - type: fixed-rate
+        unfinished_per_client: 25
+    - type: fixed-feedback-rate
       opts:
         tps: 50
-    - type: fixed-rate
+        unfinished_per_client: 50
+    - type: fixed-feedback-rate
       opts:
         tps: 75
+        unfinished_per_client: 75
+    - type: fixed-feedback-rate
+      opts:
+        tps: 25
+        unfinished_per_client: 25
+    - type: fixed-feedback-rate
+      opts:
+        tps: 50
+        unfinished_per_client: 50
+    - type: fixed-feedback-rate
+      opts:
+        tps: 75
+        unfinished_per_client: 75
+    - type: fixed-feedback-rate
+      opts:
+        tps: 25
+        unfinished_per_client: 25
+    - type: fixed-feedback-rate
+      opts:
+        tps: 50
+        unfinished_per_client: 50
+    - type: fixed-feedback-rate
+      opts:
+        tps: 75
+        unfinished_per_client: 75
     callback: benchmark/smarthomes/sendReading.js
-  - label: query
-    txNumber:
-    - 500
-    rateControl:
-    - type: fixed-rate
-      opts:
-        tps: 25
-    - type: fixed-rate
-      opts:
-        tps: 50
-    - type: fixed-rate
-      opts:
-        tps: 75
-    callback: benchmark/smarthomes/query.js
 monitor:
   type:
   - docker
@@ -46,7 +68,12 @@ monitor:
     - http://158.39.75.156:2376/orderer1.example.com
     - http://158.39.75.156:2376/orderer2.example.com
     - http://158.39.75.156:2376/zookeeper0
+    - http://158.39.75.156:2376/zookeeper1
+    - http://158.39.75.156:2376/zookeeper2
     - http://158.39.75.156:2376/kafka0
+    - http://158.39.75.156:2376/kafka1
+    - http://158.39.75.156:2376/kafka2
+    - http://158.39.75.156:2376/kafka3
   process:
   - command: node
     arguments: local-client.js

@@ -73,7 +73,7 @@
       "channel": [
         {
           "name": "mychannel",
-          "deployed": true,
+          "deployed": false,
           "config": "network/fabric-v1.2/fabric-base/network-config/channel.tx",
           "organizations": ["org1", "org2", "org3"]
         }
