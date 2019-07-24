@@ -29,11 +29,11 @@ clients:
     client:
       organization: Org1
       credentialStore:
-        path: /tmp/hfc-kvs-base/org1
+        path: /tmp/hfc-kvs-base-1/org1
         cryptoStore:
-          path: /tmp/hfc-cvs-base/org1
+          path: /tmp/hfc-cvs-base-1/org1
       clientPrivateKey:
-        path: network/fabric-v1.2/fabric-base/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/6eec0699bcb3809ea9ef3b50676e81486954f082da1b99672693aff372327af0_sk
+        path: network/fabric-v1.2/fabric-base/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/a2a280e26cf216b602c98738ce83f2a7d1b4fbba79357d460943e856238b1a9f_sk
       clientSignedCert:
         path: network/fabric-v1.2/fabric-base/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem
 
@@ -41,11 +41,11 @@ clients:
     client:
       organization: Org2
       credentialStore:
-        path: /tmp/hfc-kvs-base/org2
+        path: /tmp/hfc-kvs-base-1/org2
         cryptoStore:
-          path: /tmp/hfc-cvs-base/org2
+          path: /tmp/hfc-cvs-base-1/org2
       clientPrivateKey:
-        path: network/fabric-v1.2/fabric-base/crypto-config/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/keystore/d3e0f9cc0ab3bfa6e07cd930c9cc43c4f76b7828566d3171c3635446727546cc_sk
+        path: network/fabric-v1.2/fabric-base/crypto-config/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/keystore/94ccfdc8392f0c01652c5be65a2f5e3c3a47b8ffcd630ee80725310dfa8c79a6_sk
       clientSignedCert:
         path: network/fabric-v1.2/fabric-base/crypto-config/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/signcerts/User1@org2.example.com-cert.pem
 
@@ -53,11 +53,11 @@ clients:
     client:
       organization: Org3
       credentialStore:
-        path: /tmp/hfc-kvs-base/org3
+        path: /tmp/hfc-kvs-base-1/org3
         cryptoStore:
-          path: /tmp/hfc-cvs-base/org3
+          path: /tmp/hfc-cvs-base-1/org3
       clientPrivateKey:
-        path: network/fabric-v1.2/fabric-base/crypto-config/peerOrganizations/org3.example.com/users/User1@org3.example.com/msp/keystore/d560753bd698b786f1c334f378da9be308e680dd59a03d035a4109d857f37d67_sk
+        path: network/fabric-v1.2/fabric-base/crypto-config/peerOrganizations/org3.example.com/users/User1@org3.example.com/msp/keystore/5da683288867a61bcbea6abca5d08fc0112b87d7f144a3bfeb6c7a132caa025e_sk
       clientSignedCert:
         path: network/fabric-v1.2/fabric-base/crypto-config/peerOrganizations/org3.example.com/users/User1@org3.example.com/msp/signcerts/User1@org3.example.com-cert.pem
 
@@ -134,7 +134,7 @@ organizations:
     certificateAuthorities:
     - ca.example.com
     adminPrivateKey:
-      path: network/fabric-v1.2/fabric-base/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/71920a0e5c7a92e02448148190807bfd5dd9ffea9c811dd64f3ab06874b67b7d_sk
+      path: network/fabric-v1.2/fabric-base/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/22d6a44b2a47ab7eb23202ef0a5871286027f14dba2079445bea013dceb657fc_sk
     signedCert:
       path: network/fabric-v1.2/fabric-base/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem
 
@@ -146,7 +146,7 @@ organizations:
     certificateAuthorities:
     - ca2.example.com
     adminPrivateKey:
-      path: network/fabric-v1.2/fabric-base/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/3e880979a06e179e6cddfc57684e5343188a875d1d3f104a0ac00782d14557e9_sk
+      path: network/fabric-v1.2/fabric-base/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/68679f50d2645362013a39ebf87d93a63e5624fc6210a422894f6f49aeb1bd0f_sk
     signedCert:
       path: network/fabric-v1.2/fabric-base/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/Admin@org2.example.com-cert.pem
 
@@ -157,7 +157,7 @@ organizations:
     certificateAuthorities:
     - ca3.example.com
     adminPrivateKey:
-      path: network/fabric-v1.2/fabric-base/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/keystore/207519d9960c76830db6fb4eeb2f0b576d52a6b7e7fe768f714ba7b6fc866f9e_sk
+      path: network/fabric-v1.2/fabric-base/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/keystore/782b0e8b284e5d12cec12d2735736f0178277f1802dff17a6f9ef8796df132f9_sk
     signedCert:
       path: network/fabric-v1.2/fabric-base/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/signcerts/Admin@org3.example.com-cert.pem
 

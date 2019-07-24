@@ -1,5 +1,5 @@
 core:
-    client-request-timeout: 45000
+    client-request-timeout: 85000
     tx-update-time: 1000
     log-file:
         debug: log/caliper.log
@@ -24,5 +24,3 @@ fabricCcp:
     countQueryAsLoad: true
 fabric:
 sawtooth:
-
-

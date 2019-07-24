@@ -29,9 +29,9 @@ clients:
     client:
       organization: Org1
       credentialStore:
-        path: /tmp/hfc-kvs/org1
+        path: /tmp/hfc-kvs/fabric-tls/org1
         cryptoStore:
-          path: /tmp/hfc-cvs/org1
+          path: /tmp/hfc-cvs/fabric-tls/org1
       clientPrivateKey:
         path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/6eec0699bcb3809ea9ef3b50676e81486954f082da1b99672693aff372327af0_sk
       clientSignedCert:
@@ -41,9 +41,9 @@ clients:
     client:
       organization: Org2
       credentialStore:
-        path: /tmp/hfc-kvs/org2
+        path: /tmp/hfc-kvs/fabric-tls/org2
         cryptoStore:
-          path: /tmp/hfc-cvs/org2
+          path: /tmp/hfc-cvs/fabric-tls/org2
       clientPrivateKey:
         path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/keystore/d3e0f9cc0ab3bfa6e07cd930c9cc43c4f76b7828566d3171c3635446727546cc_sk
       clientSignedCert:
@@ -53,9 +53,9 @@ clients:
     client:
       organization: Org3
       credentialStore:
-        path: /tmp/hfc-kvs/org3
+        path: /tmp/hfc-kvs/fabric-tls/org3
         cryptoStore:
-          path: /tmp/hfc-cvs/org3
+          path: /tmp/hfc-cvs/fabric-tls/org3
       clientPrivateKey:
         path: network/fabric-v1.2/fabric-tls/crypto-config/peerOrganizations/org3.example.com/users/User1@org3.example.com/msp/keystore/d560753bd698b786f1c334f378da9be308e680dd59a03d035a4109d857f37d67_sk
       clientSignedCert:

@@ -1,6 +1,6 @@
 ---
 test:
-  name: fabric-base-240
+  name: fabric-base
   clients:
     type: local
     number: 20
