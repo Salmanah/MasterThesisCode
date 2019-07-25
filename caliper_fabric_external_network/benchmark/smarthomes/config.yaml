@@ -7,52 +7,23 @@ test:
   rounds:
   - label: init
     txNumber:
-    - 500
-    - 500
-    - 500
     - 1000
     - 1000
     - 1000
-    - 1500
-    - 1500
-    - 1500
+    - 1000
     rateControl:
-    - type: fixed-feedback-rate
+    - type: fixed-rate
       opts:
         tps: 25
-        unfinished_per_client: 25
-    - type: fixed-feedback-rate
+    - type: fixed-rate
       opts:
         tps: 50
-        unfinished_per_client: 50
-    - type: fixed-feedback-rate
+    - type: fixed-rate
       opts:
-        tps: 75
-        unfinished_per_client: 75
-    - type: fixed-feedback-rate
+        tps: 100
+    - type: fixed-rate
       opts:
-        tps: 25
-        unfinished_per_client: 25
-    - type: fixed-feedback-rate
-      opts:
-        tps: 50
-        unfinished_per_client: 50
-    - type: fixed-feedback-rate
-      opts:
-        tps: 75
-        unfinished_per_client: 75
-    - type: fixed-feedback-rate
-      opts:
-        tps: 25
-        unfinished_per_client: 25
-    - type: fixed-feedback-rate
-      opts:
-        tps: 50
-        unfinished_per_client: 50
-    - type: fixed-feedback-rate
-      opts:
-        tps: 75
-        unfinished_per_client: 75
+        tps: 1000
     callback: benchmark/smarthomes/sendReading.js
 monitor:
   type:
