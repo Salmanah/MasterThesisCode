@@ -46,10 +46,10 @@ Orderer: &OrdererDefaults
     OrdererType: solo
     Addresses:
         - orderer0.example.com:7050
-    BatchTimeout: 2s
+    BatchTimeout: 5s
     BatchSize:
-        MaxMessageCount: 10
-        AbsoluteMaxBytes: 99 MB
+        MaxMessageCount: 100
+        AbsoluteMaxBytes: 1 MB
         PreferredMaxBytes: 512 KB
     Organizations:
 
