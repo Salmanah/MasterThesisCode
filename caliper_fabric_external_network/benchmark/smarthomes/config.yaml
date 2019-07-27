@@ -3,7 +3,7 @@ test:
   name: fabric-base
   clients:
     type: local
-    number: 20
+    number: 5
   rounds:
   - label: init
     txNumber:
