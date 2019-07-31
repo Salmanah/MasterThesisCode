@@ -40,7 +40,7 @@ type DeviceReading struct{
 	ID            	string `json:"id"`
 	DeviceType		string `json:"Type"`
 	Data 			string `json:"data"`
-	DataSize		int `json:"dataSize"`
+	DataSize 		int `json:"dataSize"`
 }
 
 
@@ -95,7 +95,7 @@ func (t *SimpleChaincode) sendDeviceReading(stub shim.ChaincodeStubInterface, ar
 	var err error
 
 	// 0			1		 2
-	//DeviceID	   type		Data
+	//DeviceID	   data		type
 	if len(args[0]) <= 0 {
 		return shim.Error("First argument must be a non-empty string (DeviceID)")
 	}
@@ -110,8 +110,7 @@ func (t *SimpleChaincode) sendDeviceReading(stub shim.ChaincodeStubInterface, ar
 	id:= args[0]
 	deviceType := args[1]
 	data := args[2]
-	dataSize := len(data)
-
+	dataSize:= len(deviceType)
 
 	reading := DeviceReading{
 		objectType : "docType",
@@ -132,7 +131,7 @@ func (t *SimpleChaincode) sendDeviceReading(stub shim.ChaincodeStubInterface, ar
 		shim.Error("Failed to add readings to the blockchain - "+id)
 	}
 
-	return shim.Success([]byte("Asset modified, new temperature"))
+	return shim.Success([]byte("Asset modified"))
 }
 
 // ===============================================
@@ -199,7 +198,7 @@ func (t *SimpleChaincode) delete(stub shim.ChaincodeStubInterface, args []string
 	}
 
 	// maintain the index
-	indexName := "id~device"
+	indexName := "id~Device"
 	colorNameIndexKey, err := stub.CreateCompositeKey(indexName, []string{deviceJSON.ID})
 	if err != nil {
 		return shim.Error(err.Error())

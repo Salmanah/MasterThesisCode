@@ -1,9 +1,9 @@
 ---
 test:
-  name: fabric-base
+  name: fabric-tls-500char-20-client
   clients:
     type: local
-    number: 5
+    number: 20
   rounds:
   - label: init
     txNumber:

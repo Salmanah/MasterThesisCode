@@ -1,0 +1,453 @@
+<!doctype html>
+<html>
+<head>
+    <title>Caliper Report</title>
+    <meta charset="UTF-8"/>
+    <style type="text/css">
+        .left-column {
+            position: fixed;
+            width:20%;
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            -khtml-border-radius: 5px;
+        }
+        .right-column {
+            margin-left: 22%;
+            width:60%;
+        }
+        .left-column ul,h2 {
+            display: block;
+            margin: 10px;
+            padding: 0;
+            list-style: none;
+        }
+        .left-column ul{
+            border-top: 1px solid #d9d9d9;
+            font-size: 14px;
+        }
+        .left-column li{
+            margin-bottom: 5px;
+            color: #5e6b73;
+        }
+        .left-column h3 {
+            border-left: 5px solid #009a61;
+        }
+        .right-column>div {
+            border-top: 1px solid #d9d9d9;
+        }
+        .right-column table {
+            font-family: verdana,arial,sans-serif;
+            font-size:11px;
+            color:#333333;
+            border-width: 1px;
+            border-color: #666666;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        .right-column th {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #f2f2f2;
+        }
+        .right-column td {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #ffffff;
+        }
+        .tag {
+            display: inline-block;
+            margin-bottom: 10px;
+            padding: 5px 10px;
+            background-color: rgba(1,126,102,0.08);
+            font-family: verdana,arial,sans-serif;
+            font-size:11px;
+            color: #017E66;
+            text-align: center;
+            border-radius: 5px;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            -khtml-border-radius: 5px;
+        }
+        pre {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            -khtml-border-radius: 5px;
+            overflow:auto;
+            max-height:300px;
+            font-size:12px;
+        }
+    </style>
+</head>
+<body>
+
+<main>
+    <div class="left-column">
+        <h2>Caliper Report</h2>
+        <ul>
+            <h3>&nbspBasic information</h3>
+            <li><strong>DLT: &nbsp</strong><span>fabric</span></li>
+            <li><strong>Benchmark: &nbsp</strong><span>fabric-base-250char-10-client</span></li>
+            <li><strong>Description: &nbsp</strong><span></span></li>
+            <li><strong>Test Rounds: &nbsp</strong><span>4</span></li>
+            <li><a href="#benchmarkInfo">Details</a></li>
+        </ul>
+        <ul>
+            <h3>&nbspBenchmark results</h3>
+            <li><a href="#benchmarksummary">Summary</a></li>
+            <li><a href="#round 0">round 0</a></li>
+            <li><a href="#round 1">round 1</a></li>
+            <li><a href="#round 2">round 2</a></li>
+            <li><a href="#round 3">round 3</a></li>
+        </ul>
+        <ul>
+            <h3>&nbspSystem Under Test</h3>
+            <li><strong>Version: &nbsp</strong><span>1.2.0</span></li>
+            <li><strong>Size: &nbsp</strong><span>3 Orgs with 2 Peers in Org1 and 2, 1 peer in Org3</span></li>
+            <li><strong>Orderer: &nbsp</strong><span>Kafka</span></li>
+            <li><strong>Distribution: &nbsp</strong><span>Remote Host</span></li>
+            <li><a href="#sutdetails">Details</a></li>
+        </ul>
+    </div>
+
+    <div class="right-column">
+        <div id="benchmarksummary">
+            <table>
+                <h3>Summary</h3>
+                <tr>
+                     <th>Test</th> <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate</th> <th>Max Latency</th> <th>Min Latency</th> <th>Avg Latency</th> <th>Throughput</th>
+                </tr>
+
+                <tr>
+                     <td>1</td> <td>init</td> <td>1000</td> <td>0</td> <td>24.9 tps</td> <td>5.37 s</td> <td>0.70 s</td> <td>2.79 s</td> <td>22.1 tps</td>
+                </tr>
+                <tr>
+                     <td>2</td> <td>init</td> <td>800</td> <td>200</td> <td>50.5 tps</td> <td>5.24 s</td> <td>0.77 s</td> <td>1.99 s</td> <td>32.0 tps</td>
+                </tr>
+                <tr>
+                     <td>3</td> <td>init</td> <td>700</td> <td>300</td> <td>100.7 tps</td> <td>6.51 s</td> <td>0.85 s</td> <td>2.49 s</td> <td>45.9 tps</td>
+                </tr>
+                <tr>
+                     <td>4</td> <td>init</td> <td>400</td> <td>600</td> <td>961.5 tps</td> <td>13.56 s</td> <td>6.48 s</td> <td>9.70 s</td> <td>29.4 tps</td>
+                </tr>
+            </table>
+        </div>
+        <div id="round 0">
+            <h3>round 0&nbsp-&nbspinit</h3>
+            <strong class="tag">performance metrics</strong>
+            <table>
+                <tr>
+                     <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate</th> <th>Max Latency</th> <th>Min Latency</th> <th>Avg Latency</th> <th>Throughput</th>
+                </tr>
+                <tr>
+                     <td>init</td> <td>1000</td> <td>0</td> <td>24.9 tps</td> <td>5.37 s</td> <td>0.70 s</td> <td>2.79 s</td> <td>22.1 tps</td>
+                </tr>
+            </table>
+            <strong class="tag">resource consumption</strong>
+            <table>
+                <tr>
+                     <th>TYPE</th> <th>NAME</th> <th>Memory(max)</th> <th>Memory(avg)</th> <th>CPU(max)</th> <th>CPU(avg)</th> <th>Traffic In</th> <th>Traffic Out</th> <th>Disc Read</th> <th>Disc Write</th>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.37.63.126&#x2F;peer0.org1....e.com</td> <td>72.4MB</td> <td>57.2MB</td> <td>38.38%</td> <td>14.93%</td> <td>9.0MB</td> <td>2.9MB</td> <td>0B</td> <td>5.6MB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.37.63.198&#x2F;peer0.org2....e.com</td> <td>80.1MB</td> <td>59.4MB</td> <td>39.82%</td> <td>13.67%</td> <td>9.0MB</td> <td>2.8MB</td> <td>0B</td> <td>5.6MB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.37.63.35&#x2F;peer0.org3.e...e.com</td> <td>77.9MB</td> <td>58.3MB</td> <td>52.34%</td> <td>23.34%</td> <td>11.0MB</td> <td>4.6MB</td> <td>0B</td> <td>5.6MB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.37.63.234&#x2F;peer1.org1....e.com</td> <td>82.3MB</td> <td>63.2MB</td> <td>42.79%</td> <td>17.11%</td> <td>9.0MB</td> <td>8.1MB</td> <td>0B</td> <td>5.5MB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;orderer0.ex...e.com</td> <td>30.9MB</td> <td>22.9MB</td> <td>17.02%</td> <td>10.20%</td> <td>11.8MB</td> <td>26.4MB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;orderer2.ex...e.com</td> <td>17.2MB</td> <td>12.5MB</td> <td>6.55%</td> <td>3.91%</td> <td>5.5MB</td> <td>295.0KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;orderer1.ex...e.com</td> <td>16.9MB</td> <td>12.3MB</td> <td>6.72%</td> <td>4.09%</td> <td>5.5MB</td> <td>294.0KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;kafka1</td> <td>313.9MB</td> <td>305.9MB</td> <td>8.48%</td> <td>3.54%</td> <td>5.5MB</td> <td>284.8KB</td> <td>0B</td> <td>44.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;kafka2</td> <td>302.5MB</td> <td>290.0MB</td> <td>8.96%</td> <td>4.20%</td> <td>5.5MB</td> <td>259.0KB</td> <td>0B</td> <td>40.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;kafka3</td> <td>306.9MB</td> <td>306.0MB</td> <td>56.04%</td> <td>5.65%</td> <td>162.2KB</td> <td>289.1KB</td> <td>0B</td> <td>44.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;kafka0</td> <td>333.5MB</td> <td>320.4MB</td> <td>93.85%</td> <td>23.86%</td> <td>6.5MB</td> <td>27.5MB</td> <td>0B</td> <td>44.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;zookeeper2</td> <td>40.3MB</td> <td>39.7MB</td> <td>1.30%</td> <td>0.33%</td> <td>15.4KB</td> <td>18.3KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;zookeeper1</td> <td>37.7MB</td> <td>37.7MB</td> <td>0.80%</td> <td>0.22%</td> <td>10.5KB</td> <td>6.3KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;zookeeper0</td> <td>36.8MB</td> <td>36.7MB</td> <td>0.51%</td> <td>0.21%</td> <td>10.5KB</td> <td>6.3KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.210&#x2F;peer1.org2....e.com</td> <td>101.2MB</td> <td>81.6MB</td> <td>29.91%</td> <td>13.09%</td> <td>8.9MB</td> <td>2.7MB</td> <td>0B</td> <td>5.5MB</td>
+                </tr>
+            </table>
+        </div>
+        <div id="round 1">
+            <h3>round 1&nbsp-&nbspinit</h3>
+            <strong class="tag">performance metrics</strong>
+            <table>
+                <tr>
+                     <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate</th> <th>Max Latency</th> <th>Min Latency</th> <th>Avg Latency</th> <th>Throughput</th>
+                </tr>
+                <tr>
+                     <td>init</td> <td>800</td> <td>200</td> <td>50.5 tps</td> <td>5.24 s</td> <td>0.77 s</td> <td>1.99 s</td> <td>32.0 tps</td>
+                </tr>
+            </table>
+            <strong class="tag">resource consumption</strong>
+            <table>
+                <tr>
+                     <th>TYPE</th> <th>NAME</th> <th>Memory(max)</th> <th>Memory(avg)</th> <th>CPU(max)</th> <th>CPU(avg)</th> <th>Traffic In</th> <th>Traffic Out</th> <th>Disc Read</th> <th>Disc Write</th>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.37.63.126&#x2F;peer0.org1....e.com</td> <td>101.5MB</td> <td>98.7MB</td> <td>51.29%</td> <td>8.75%</td> <td>8.8MB</td> <td>2.8MB</td> <td>0B</td> <td>5.6MB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.37.63.198&#x2F;peer0.org2....e.com</td> <td>105.2MB</td> <td>102.6MB</td> <td>32.76%</td> <td>4.49%</td> <td>8.8MB</td> <td>2.6MB</td> <td>0B</td> <td>5.6MB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.37.63.35&#x2F;peer0.org3.e...e.com</td> <td>108.8MB</td> <td>106.1MB</td> <td>61.62%</td> <td>8.12%</td> <td>10.8MB</td> <td>4.7MB</td> <td>0B</td> <td>5.6MB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.37.63.234&#x2F;peer1.org1....e.com</td> <td>112.5MB</td> <td>108.5MB</td> <td>47.13%</td> <td>6.03%</td> <td>8.9MB</td> <td>7.8MB</td> <td>0B</td> <td>5.6MB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;orderer0.ex...e.com</td> <td>40.0MB</td> <td>39.1MB</td> <td>20.08%</td> <td>3.53%</td> <td>11.1MB</td> <td>22.4MB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;orderer2.ex...e.com</td> <td>27.9MB</td> <td>27.0MB</td> <td>10.03%</td> <td>1.78%</td> <td>5.4MB</td> <td>345.8KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;orderer1.ex...e.com</td> <td>27.9MB</td> <td>26.9MB</td> <td>10.76%</td> <td>1.85%</td> <td>5.4MB</td> <td>351.7KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;kafka1</td> <td>315.3MB</td> <td>314.7MB</td> <td>14.61%</td> <td>1.44%</td> <td>5.2MB</td> <td>289.6KB</td> <td>0B</td> <td>108.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;kafka2</td> <td>308.4MB</td> <td>307.6MB</td> <td>12.61%</td> <td>1.49%</td> <td>5.1MB</td> <td>232.0KB</td> <td>0B</td> <td>112.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;kafka3</td> <td>317.8MB</td> <td>310.9MB</td> <td>37.95%</td> <td>3.53%</td> <td>418.4KB</td> <td>717.4KB</td> <td>0B</td> <td>108.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;kafka0</td> <td>342.5MB</td> <td>337.6MB</td> <td>79.96%</td> <td>6.59%</td> <td>6.1MB</td> <td>26.0MB</td> <td>0B</td> <td>108.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;zookeeper2</td> <td>45.0MB</td> <td>42.1MB</td> <td>3.80%</td> <td>0.25%</td> <td>38.1KB</td> <td>45.1KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;zookeeper1</td> <td>42.7MB</td> <td>40.8MB</td> <td>0.63%</td> <td>0.15%</td> <td>26.0KB</td> <td>15.6KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;zookeeper0</td> <td>37.4MB</td> <td>37.0MB</td> <td>0.35%</td> <td>0.14%</td> <td>26.0KB</td> <td>15.6KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.210&#x2F;peer1.org2....e.com</td> <td>106.4MB</td> <td>106.1MB</td> <td>37.59%</td> <td>5.29%</td> <td>3.6MB</td> <td>2.0MB</td> <td>0B</td> <td>548.0KB</td>
+                </tr>
+            </table>
+        </div>
+        <div id="round 2">
+            <h3>round 2&nbsp-&nbspinit</h3>
+            <strong class="tag">performance metrics</strong>
+            <table>
+                <tr>
+                     <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate</th> <th>Max Latency</th> <th>Min Latency</th> <th>Avg Latency</th> <th>Throughput</th>
+                </tr>
+                <tr>
+                     <td>init</td> <td>700</td> <td>300</td> <td>100.7 tps</td> <td>6.51 s</td> <td>0.85 s</td> <td>2.49 s</td> <td>45.9 tps</td>
+                </tr>
+            </table>
+            <strong class="tag">resource consumption</strong>
+            <table>
+                <tr>
+                     <th>TYPE</th> <th>NAME</th> <th>Memory(max)</th> <th>Memory(avg)</th> <th>CPU(max)</th> <th>CPU(avg)</th> <th>Traffic In</th> <th>Traffic Out</th> <th>Disc Read</th> <th>Disc Write</th>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.37.63.126&#x2F;peer0.org1....e.com</td> <td>104.2MB</td> <td>104.1MB</td> <td>46.99%</td> <td>5.31%</td> <td>2.0MB</td> <td>1.9MB</td> <td>0B</td> <td>556.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.37.63.198&#x2F;peer0.org2....e.com</td> <td>137.8MB</td> <td>136.3MB</td> <td>63.38%</td> <td>6.11%</td> <td>8.7MB</td> <td>2.8MB</td> <td>0B</td> <td>5.6MB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.37.63.35&#x2F;peer0.org3.e...e.com</td> <td>138.6MB</td> <td>136.8MB</td> <td>66.87%</td> <td>7.90%</td> <td>10.5MB</td> <td>4.5MB</td> <td>0B</td> <td>5.6MB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.37.63.234&#x2F;peer1.org1....e.com</td> <td>115.8MB</td> <td>115.4MB</td> <td>25.16%</td> <td>3.34%</td> <td>3.9MB</td> <td>2.6MB</td> <td>0B</td> <td>548.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;orderer0.ex...e.com</td> <td>48.8MB</td> <td>48.4MB</td> <td>46.64%</td> <td>3.99%</td> <td>10.1MB</td> <td>15.5MB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;orderer2.ex...e.com</td> <td>37.8MB</td> <td>37.2MB</td> <td>19.13%</td> <td>1.92%</td> <td>4.9MB</td> <td>338.9KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;orderer1.ex...e.com</td> <td>37.9MB</td> <td>37.2MB</td> <td>19.15%</td> <td>1.89%</td> <td>4.9MB</td> <td>338.1KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;kafka1</td> <td>323.2MB</td> <td>322.6MB</td> <td>14.30%</td> <td>1.52%</td> <td>4.8MB</td> <td>291.2KB</td> <td>0B</td> <td>104.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;kafka2</td> <td>313.8MB</td> <td>313.3MB</td> <td>14.58%</td> <td>1.56%</td> <td>4.7MB</td> <td>236.0KB</td> <td>0B</td> <td>100.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;kafka3</td> <td>324.6MB</td> <td>317.4MB</td> <td>169.03%</td> <td>6.32%</td> <td>399.2KB</td> <td>657.3KB</td> <td>0B</td> <td>104.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;kafka0</td> <td>356.4MB</td> <td>355.2MB</td> <td>82.45%</td> <td>5.00%</td> <td>5.7MB</td> <td>24.0MB</td> <td>0B</td> <td>104.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;zookeeper2</td> <td>47.4MB</td> <td>46.4MB</td> <td>2.32%</td> <td>0.20%</td> <td>34.6KB</td> <td>41.1KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;zookeeper1</td> <td>43.0MB</td> <td>42.7MB</td> <td>0.36%</td> <td>0.13%</td> <td>23.6KB</td> <td>14.2KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;zookeeper0</td> <td>41.5MB</td> <td>40.3MB</td> <td>0.67%</td> <td>0.13%</td> <td>23.6KB</td> <td>14.2KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.210&#x2F;peer1.org2....e.com</td> <td>106.6MB</td> <td>106.5MB</td> <td>35.40%</td> <td>5.15%</td> <td>1.8MB</td> <td>1.7MB</td> <td>0B</td> <td>0B</td>
+                </tr>
+            </table>
+        </div>
+        <div id="round 3">
+            <h3>round 3&nbsp-&nbspinit</h3>
+            <strong class="tag">performance metrics</strong>
+            <table>
+                <tr>
+                     <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate</th> <th>Max Latency</th> <th>Min Latency</th> <th>Avg Latency</th> <th>Throughput</th>
+                </tr>
+                <tr>
+                     <td>init</td> <td>400</td> <td>600</td> <td>961.5 tps</td> <td>13.56 s</td> <td>6.48 s</td> <td>9.70 s</td> <td>29.4 tps</td>
+                </tr>
+            </table>
+            <strong class="tag">resource consumption</strong>
+            <table>
+                <tr>
+                     <th>TYPE</th> <th>NAME</th> <th>Memory(max)</th> <th>Memory(avg)</th> <th>CPU(max)</th> <th>CPU(avg)</th> <th>Traffic In</th> <th>Traffic Out</th> <th>Disc Read</th> <th>Disc Write</th>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.37.63.126&#x2F;peer0.org1....e.com</td> <td>125.4MB</td> <td>124.7MB</td> <td>79.71%</td> <td>5.45%</td> <td>1.2MB</td> <td>2.0MB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.37.63.198&#x2F;peer0.org2....e.com</td> <td>163.3MB</td> <td>162.8MB</td> <td>74.78%</td> <td>3.75%</td> <td>2.9MB</td> <td>1.8MB</td> <td>0B</td> <td>548.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.37.63.35&#x2F;peer0.org3.e...e.com</td> <td>198.3MB</td> <td>196.7MB</td> <td>74.78%</td> <td>8.55%</td> <td>9.0MB</td> <td>4.4MB</td> <td>0B</td> <td>5.6MB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.37.63.234&#x2F;peer1.org1....e.com</td> <td>134.5MB</td> <td>134.2MB</td> <td>72.03%</td> <td>3.67%</td> <td>950.6KB</td> <td>1.6MB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;orderer0.ex...e.com</td> <td>64.1MB</td> <td>63.4MB</td> <td>60.95%</td> <td>3.88%</td> <td>10.6MB</td> <td>12.3MB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;orderer2.ex...e.com</td> <td>49.2MB</td> <td>48.7MB</td> <td>37.68%</td> <td>2.24%</td> <td>5.2MB</td> <td>300.3KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;orderer1.ex...e.com</td> <td>48.4MB</td> <td>47.9MB</td> <td>38.66%</td> <td>2.25%</td> <td>5.2MB</td> <td>303.2KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;kafka1</td> <td>328.3MB</td> <td>328.0MB</td> <td>5.99%</td> <td>1.05%</td> <td>5.1MB</td> <td>255.7KB</td> <td>0B</td> <td>92.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;kafka2</td> <td>318.8MB</td> <td>318.5MB</td> <td>9.76%</td> <td>1.07%</td> <td>5.0MB</td> <td>197.8KB</td> <td>0B</td> <td>92.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;kafka3</td> <td>322.5MB</td> <td>322.4MB</td> <td>14.20%</td> <td>1.78%</td> <td>379.3KB</td> <td>638.0KB</td> <td>0B</td> <td>92.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;kafka0</td> <td>393.4MB</td> <td>374.3MB</td> <td>34.66%</td> <td>3.94%</td> <td>5.9MB</td> <td>25.5MB</td> <td>0B</td> <td>92.0KB</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;zookeeper2</td> <td>47.6MB</td> <td>47.3MB</td> <td>0.54%</td> <td>0.17%</td> <td>33.7KB</td> <td>40.2KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;zookeeper1</td> <td>43.1MB</td> <td>42.9MB</td> <td>0.77%</td> <td>0.14%</td> <td>23.0KB</td> <td>13.9KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.156&#x2F;zookeeper0</td> <td>41.6MB</td> <td>41.4MB</td> <td>0.29%</td> <td>0.13%</td> <td>23.0KB</td> <td>13.9KB</td> <td>0B</td> <td>0B</td>
+                </tr>
+                <tr>
+                     <td>Docker</td> <td>158.39.75.210&#x2F;peer1.org2....e.com</td> <td>124.8MB</td> <td>124.5MB</td> <td>73.42%</td> <td>4.80%</td> <td>879.2KB</td> <td>1.5MB</td> <td>0B</td> <td>0B</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <h3>Test Environment</h3>
+            <strong class="tag">benchmark config</strong>
+            <pre id="benchmarkInfo">{
+  &quot;name&quot;: &quot;fabric-base-250char-10-client&quot;,
+  &quot;clients&quot;: {
+    &quot;type&quot;: &quot;local&quot;,
+    &quot;number&quot;: 10
+  },
+  &quot;rounds&quot;: [
+    {
+      &quot;label&quot;: &quot;init&quot;,
+      &quot;txNumber&quot;: [
+        1000,
+        1000,
+        1000,
+        1000
+      ],
+      &quot;rateControl&quot;: [
+        {
+          &quot;type&quot;: &quot;fixed-rate&quot;,
+          &quot;opts&quot;: {
+            &quot;tps&quot;: 25
+          }
+        },
+        {
+          &quot;type&quot;: &quot;fixed-rate&quot;,
+          &quot;opts&quot;: {
+            &quot;tps&quot;: 50
+          }
+        },
+        {
+          &quot;type&quot;: &quot;fixed-rate&quot;,
+          &quot;opts&quot;: {
+            &quot;tps&quot;: 100
+          }
+        },
+        {
+          &quot;type&quot;: &quot;fixed-rate&quot;,
+          &quot;opts&quot;: {
+            &quot;tps&quot;: 1000
+          }
+        }
+      ],
+      &quot;callback&quot;: &quot;benchmark&#x2F;smarthomes&#x2F;sendReading.js&quot;
+    }
+  ]
+}</pre>
+            <strong class="tag">SUT</strong>
+            <pre id="sutdetails">not provided</pre>
+        </div>
+    </div>
+
+
+</main>
+
+</body>
+</html>
