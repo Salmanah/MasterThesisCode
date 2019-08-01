@@ -1,6 +1,6 @@
 ---
 test:
-  name: fabric-tls-500char-20-client
+  name: fabric-solo-500char-20-client
   clients:
     type: local
     number: 20
