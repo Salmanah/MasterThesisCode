@@ -131,7 +131,7 @@ func (t *SimpleChaincode) sendDeviceReading(stub shim.ChaincodeStubInterface, ar
 		shim.Error("Failed to add readings to the blockchain - "+id)
 	}
 	
-	return shim.Success([]byte("Asset modified, new temperature"))
+	return shim.Success([]byte("Asset modified"))
 }
 
 // ===============================================

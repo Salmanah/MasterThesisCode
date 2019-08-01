@@ -39,7 +39,7 @@ Orderer: &OrdererDefaults
     BatchSize:
         MaxMessageCount: 100
         AbsoluteMaxBytes: 1 MB
-        PreferredMaxBytes: 100 KB
+        PreferredMaxBytes: 512 KB
     Kafka:
         Brokers:
             - kafka0:9092
